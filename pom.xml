@@ -29,11 +29,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
 			<version>2.2.0</version>
-		</dependency>
+		</dependency>-->
 
 
 		<!-- https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp -->
@@ -91,6 +91,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>dubo</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

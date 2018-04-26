@@ -1,9 +1,5 @@
 package cn.cherish.dubo.dubo.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,27 +13,27 @@ import java.util.Date;
  * @since 2018-04-26
  */
 @Data
-@TableName("dubo_combination")
+//@TableName("dubo_combination")
 public class Combination implements Serializable {
 
     private static final long serialVersionUID = 6098103423384200506L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+//    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("termNum")
+//    @TableField("termNum")
     private Integer termNum;
 
-    @TableField("first")
+//    @TableField("first")
     private Integer first;
 
-    @TableField("second")
+//    @TableField("second")
     private Integer second;
 
-    @TableField("third")
+//    @TableField("third")
     private Integer third;
 
-    @TableField("createdTime")
+//    @TableField("createdTime")
     private Date createdTime;
 
 }

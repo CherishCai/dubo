@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>666666</title>
+
+    <style>
+        .left {
+            min-height: 400px;
+        }
+        .right {
+            min-height: 400px;
+        }
+
+        .data {
+            display: block;
+            min-height: 200px;
+        }
+
+        .data2 {
+            display: block;
+            min-height: 400px;
+        }
+
+        .datameta {
+            float: left;
+            border: solid;
+            text-align: center;
+        }
+
+        .red {
+            color: red;
+        }
+    </style>
+</head>
+<body style="min-width: 999px;font-size: 12px">
+
+<table border="1">
+    <tr>
+        <td class="left">
+            <h3>单一</h3>
+
+            <h4>9_680</h4>
+            <div id="data9_6810" class="data">
+                <!--<div class="datameta">
+                    <p>大小</p>
+                    <p>单双</p>
+                    <p>三</p>
+                    <p>二</p>
+                    <p>一</p>
+                    <p>termNum</p>
+                </div>-->
+            </div>
+
+            <h4>7_680</h4>
+            <div id="data7_6810" class="data"></div><br/>
+
+            <h4>4_135</h4>
+            <div id="data4_135" class="data"></div><br/>
+            <h4>2_135</h4>
+            <div id="data2_135" class="data"></div><br/>
+
+            <h4>9_24</h4>
+            <div id="data9_24" class="data"></div><br/>
+            <h4>7_24</h4>
+            <div id="data7_24" class="data"></div><br/>
+
+            <h4>4_79</h4>
+            <div id="data4_79" class="data"></div><br/>
+            <h4>2_79</h4>
+            <div id="data2_79" class="data"></div><br/>
+        </td>
+        <td class="right">
+            <h3>混合</h3>
+
+            <h4>79_680</h4>
+            <div id="data79_6810" class="data2"></div><br/>
+
+            <h4>24_135</h4>
+            <div id="data24_135" class="data2"></div><br/>
+
+            <h4>79_24</h4>
+            <div id="data79_24" class="data2"></div><br/>
+            <h4>24_79</h4>
+            <div id="data24_79" class="data2"></div><br/>
+        </td>
+    </tr>
+</table>
+
+
+<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+<script src="js/ajax.js"></script>
+<script>
+
+    var dataKey = ["2_79", "2_135","4_79","4_135","7_24","7_6810","9_24","9_6810",
+                    "24_79","24_135","79_24","79_6810"];
+    function syncData(){
+        var url = "http://localhost:8080/dubo/data";
+        var result = getAjax(url);
+
+        if (result.success) {
+            for(var k in dataKey){
+                var kk = dataKey[k];
+
+                var data = result.data;
+                var dd = data[kk];
+
+                $("#data"+kk).empty();
+                $.each(dd, function (index, obj) {
+                    var third = obj.third;
+                    var even = (third % 2 == 0);
+                    var big = (third > 5);
+                    var curTermNum = obj.termNum;
+
+                    var sameTermNumWithPrev = false;
+                    if (index > 0) {
+                        var prev =  dd[index - 1];
+                        var prevCurTermNum = prev.termNum;
+                        sameTermNumWithPrev = (curTermNum == prevCurTermNum);
+                    }
+                    var html = '<div class="datameta">' +
+                        '<p>' + (big ? "大" : "小") + '</p>' +
+                        '<p>' + (even ? "双" : "单") + '</p>' +
+                        '<p>' + third + '</p>' +
+                        '<p>' + obj.second + '</p>' +
+                        '<p>' + obj.first + '</p>' +
+                        '<p class="'+(sameTermNumWithPrev ? "red" : "")+'">' + curTermNum + '</p>' +
+                        '</div>';
+
+                    $("#data"+kk).append(html)
+                });
+            }
+        }
+    }
+
+    $(function () {
+        syncData();
+        setInterval("syncData()", 6666);
+
+    });
+</script>
+
+</body>
+</html>

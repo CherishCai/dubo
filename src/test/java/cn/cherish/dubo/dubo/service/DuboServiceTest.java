@@ -1,6 +1,5 @@
 package cn.cherish.dubo.dubo.service;
 
-import cn.cherish.dubo.dubo.service.impl.TermServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,8 @@ public class DuboServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        duboService = new DuboService(new TermServiceImpl());
+        duboService = new DuboService();
+//        duboService.termService = new TermServiceImpl();
     }
 
     @After

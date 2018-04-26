@@ -8,12 +8,10 @@ import cn.cherish.dubo.dubo.util.rule.DuboRule;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -102,25 +100,22 @@ public class DuboService {
 
         TimeUnit.SECONDS.sleep(5);
 
-        doSaveTerm();
+//        doSaveTerm();
 
         return false;
     };
 
-    private final TermService termService;
 
-    @Autowired
-    public DuboService(TermService termService) {
-        this.termService = termService;
-    }
+//    @Autowired
+//    TermService termService;
 
-    @PostConstruct
+//    @PostConstruct
     /* public for test*/ public void init() {
         // 寻找最近的一个
-        Term term = termService.findLargeTerm();
+       /* Term term = termService.findLargeTerm();
         if (term != null) {
             largeTermNumInDB = term.getTermNum();
-        }
+        }*/
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             schInLoop.shutdown();
@@ -140,7 +135,7 @@ public class DuboService {
     }
 
 
-    private void doSaveTerm() {
+    /*private void doSaveTerm() {
         log.info("start doSaveTerm");
         boolean success = false;
         while (!success) {
@@ -184,7 +179,7 @@ public class DuboService {
             success = true;
         }
 
-    }
+    }*/
 
     private Term newTerm(DuboUtils.History.RowsBean rowsBean) {
         String termNum = rowsBean.getTermNum();
@@ -216,12 +211,12 @@ public class DuboService {
     /**
      * 每十秒
      */
-    @Scheduled(fixedDelay = 10 * 1000, initialDelay = 30 * 1000)
+    @Scheduled(fixedDelay = 10 * 1000, initialDelay = 5 * 1000)
     public void dealData() {
         log.info("dealData every 10 sec");
 
         // 避免数据遗漏
-        checkDBData();
+//        checkDBData();
 
         // 处理全局缓存
         dealCache();
@@ -230,8 +225,12 @@ public class DuboService {
     public static volatile List<Combination> cacheAllList = new LinkedList<>();
     public static volatile Map<String, List<Combination>> afterProcessingCache = new HashMap<>();
 
+    public Map<String, List<Combination>> getCache() {
+        return afterProcessingCache;
+    }
+
     public void dealCache() {
-        DuboUtils.History history = DuboUtils.getHistory(88);
+        DuboUtils.History history = DuboUtils.getHistory(144);
         if (history == null || !history.isSuccess()) {
             return;
         }
@@ -302,7 +301,7 @@ public class DuboService {
                 String secondStr = Joiner.on("").join(ruleSecond);
                 String mapKey = firstStr + "_" + secondStr;
 
-                afterProcessingCache.put(mapKey, singleList);
+                afterProcessingCache.put(mapKey, sub15(singleList));
             }
         }
 
@@ -317,8 +316,8 @@ public class DuboService {
             String firstStr = Joiner.on("").join(ruleFirst);
             String secondStr = Joiner.on("").join(ruleSecond);
             String mapKey = firstStr + "_" + secondStr;
-            
-            afterProcessingCache.put(mapKey, blendList);
+
+            afterProcessingCache.put(mapKey, sub15(blendList));
         }
         long end = System.currentTimeMillis();
 
@@ -326,7 +325,18 @@ public class DuboService {
 
     }
 
-    private void checkDBData() {
+    private List<Combination> sub15(List<Combination> combinationList) {
+        if (CollectionUtils.isEmpty(combinationList)) {
+            return combinationList;
+        }
+        int size = combinationList.size();
+        if (size > 15) {
+            combinationList = combinationList.subList(size - 15, size);
+        }
+        return combinationList;
+    }
+
+    /*private void checkDBData() {
         DuboUtils.History history = DuboUtils.getHistory(15);
         if (history != null && history.isSuccess()) {
             for (DuboUtils.History.RowsBean rowsBean : history.getRows()) {
@@ -346,7 +356,7 @@ public class DuboService {
             }
 
         }
-    }
+    }*/
 
 
 }

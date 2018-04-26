@@ -1,9 +1,13 @@
+/*
+ * Copyright (c) 2018. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+ * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
+ * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
+ * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
+ * Vestibulum commodo. Ut rhoncus gravida arcu.
+ */
+
 package cn.cherish.dubo.dubo.entity;
 
-import com.baomidou.mybatisplus.annotations.TableField;
-import com.baomidou.mybatisplus.annotations.TableId;
-import com.baomidou.mybatisplus.annotations.TableName;
-import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -17,37 +21,37 @@ import java.util.Date;
  * @since 2018-04-26
  */
 @Data
-@TableName("dubo_term")
+//@TableName("dubo_term")
 public class Term implements Serializable {
 
     private static final long serialVersionUID = -6557593745380183422L;
 
-    @TableId(value = "id", type = IdType.AUTO)
+//    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("termNum")
+//    @TableField("termNum")
     private Integer termNum;
 
-    @TableField("termData")
+//    @TableField("termData")
     private String termData;
 
-    @TableField("betEndTime")
+//    @TableField("betEndTime")
     private String betEndTime;
 
-    @TableField("lotteryNum")
+//    @TableField("lotteryNum")
     private String lotteryNum;
-    @TableField("lotteryTime")
+//    @TableField("lotteryTime")
     private String lotteryTime;
-    @TableField("gameId")
+//    @TableField("gameId")
     private Integer gameId;
-    @TableField("lotteryDate")
+//    @TableField("lotteryDate")
     private String lotteryDate;
-    @TableField("lotteryDateStr")
+//    @TableField("lotteryDateStr")
     private String lotteryDateStr;
-    @TableField("termNumStr")
+//    @TableField("termNumStr")
     private String termNumStr;
 
-    @TableField("createdTime")
+//    @TableField("createdTime")
     private Date createdTime;
 
 }
