@@ -119,9 +119,9 @@
                         sameTermNumWithPrev = (curTermNum == prevCurTermNum);
                     }
                     var html = '<div class="datameta">' +
-                        '<p>' + (big ? "大" : "小") + '</p>' +
-                        '<p>' + (even ? "双" : "单") + '</p>' +
-                        '<p>' + third + '</p>' +
+                        '<p><b>' + (big ? "大" : "小") + '</b></p>' +
+                        '<p><b>' + (even ? "双" : "单") + '</b></p>' +
+                        '<p><b>' + third + '</b></p>' +
                         '<p>' + obj.second + '</p>' +
                         '<p>' + obj.first + '</p>' +
                         '<p class="'+(sameTermNumWithPrev ? "red" : "")+'">' + curTermNum + '</p>' +
