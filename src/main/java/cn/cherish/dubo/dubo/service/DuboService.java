@@ -1,5 +1,6 @@
 package cn.cherish.dubo.dubo.service;
 
+import cn.cherish.dubo.dubo.constant.DuboMsgType;
 import cn.cherish.dubo.dubo.dto.resp.DuboMsgResp;
 import cn.cherish.dubo.dubo.entity.Combination;
 import cn.cherish.dubo.dubo.entity.Term;
@@ -233,13 +234,33 @@ public class DuboService {
     public static volatile Map<String, List<Combination>> todayMap = new HashMap<>();
     public static volatile Map<String, List<Combination>> todaySub15Map = new HashMap<>();
 
-    public DuboMsgResp getDuboMsg() {
-        return DuboMsgResp.builder()
-                .all(allMap)
-                .sub15(sub15Map)
-                .today(todayMap)
-                .todaySub15(todaySub15Map)
-                .build();
+    public DuboMsgResp getDuboMsg(String kk) {
+        DuboMsgResp duboMsgResp = null;
+        if (DuboMsgType.all.name().equals(kk)) {
+            duboMsgResp =  DuboMsgResp.builder()
+                    .all(allMap)
+                    .build();
+        } else if (DuboMsgType.sub15.name().equals(kk)) {
+            duboMsgResp = DuboMsgResp.builder()
+                    .sub15(sub15Map)
+                    .build();
+        } else if (DuboMsgType.today.name().equals(kk)) {
+            duboMsgResp = DuboMsgResp.builder()
+                    .today(todayMap)
+                    .build();
+        } else if (DuboMsgType.todaySub15.name().equals(kk)) {
+            duboMsgResp = DuboMsgResp.builder()
+                    .todaySub15(todaySub15Map)
+                    .build();
+        } else {
+            duboMsgResp = DuboMsgResp.builder()
+                    .all(allMap)
+                    .sub15(sub15Map)
+                    .today(todayMap)
+                    .todaySub15(todaySub15Map)
+                    .build();
+        }
+        return duboMsgResp;
     }
 
     public void dealCache() {
