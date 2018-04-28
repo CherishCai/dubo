@@ -280,7 +280,7 @@ public class DuboService {
 
                     if (ruleFirst.contains(first) && ruleSecond.contains(second)) {
                         // 获取第三个
-                        Integer third = 0;
+                        Integer third = null;
                         if (i + 2 < arr.length) {
                             third = arr[i + 2][j];
                         }
@@ -296,8 +296,10 @@ public class DuboService {
                         combination.setSecond(second);
                         combination.setThird(third);
 
-                        combination.setThirdEven(third % 2 == 0);
-                        combination.setThirdBig(third > 5);
+                        if (third != null) {
+                            combination.setThirdEven(third % 2 == 0);
+                            combination.setThirdBig(third > 5);
+                        }
 
                         combination.setLotteryDateStr(term.getLotteryDateStr());
                         combination.setCreatedTime(new Date());
