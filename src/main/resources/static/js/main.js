@@ -66,6 +66,7 @@ function syncData(){
 
                 $("#data"+kk).append(html)
             });
+            $("#data"+kk).append("<hr/>")
         }
     }
 }

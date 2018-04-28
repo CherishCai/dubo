@@ -3,25 +3,13 @@
     min-width: 1080px;font-size: 12px
 }
 
-.left {
-    min-height: 400px;
-}
-.right {
-    min-height: 400px;
-}
-
 .data {
     display: block;
     min-height: 200px;
 }
 
-.data2 {
-    display: block;
-    min-height: 400px;
-}
-
 .datameta {
-    float: left;
+    display: inline-block;
     border: solid;
     text-align: center;
 }
