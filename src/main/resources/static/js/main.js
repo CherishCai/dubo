@@ -56,8 +56,8 @@ function syncData(){
                 }
 
                 var html = '<div class="datameta">' +
-                    '<p class="'+(bigNum>=5 ? "red,big-font" : "big-font")+'"><b>' + (big ? "大" : "小") + '</b></p>' +
-                    '<p class="'+(evenNum>=5 ? "red,big-font" : "big-font")+'"><b>' + (even ? "双" : "单") + '</b></p>' +
+                    '<p class="'+(bigNum>=5 ? "red big-font" : "big-font")+'"><b>' + (big ? "大" : "小") + '</b></p>' +
+                    '<p class="'+(evenNum>=5 ? "red big-font" : "big-font")+'"><b>' + (even ? "双" : "单") + '</b></p>' +
                     '<p class="big-font"><b>' + third + '</b></p>' +
                     '<p>' + obj.second + '</p>' +
                     '<p>' + obj.first + '</p>' +

@@ -31,5 +31,12 @@
 }
 
 .big-font {
-    font-size: 14px;
+    font-size: 16px;
+}
+
+.aaaa {
+    display: inline-block;
+    width: 20%;
+    border: solid;
+    margin-right: 30px;
 }
