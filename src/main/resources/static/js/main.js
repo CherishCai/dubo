@@ -73,6 +73,6 @@ function syncData(){
 
 $(function () {
     syncData();
-    setInterval("syncData()", 666);
+    setInterval("syncData()", 6666);
 
 });
