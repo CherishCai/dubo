@@ -1,15 +1,12 @@
 package cn.cherish.dubo.dubo.controller;
 
-import cn.cherish.dubo.dubo.entity.Combination;
+import cn.cherish.dubo.dubo.dto.resp.DuboMsgResp;
 import cn.cherish.dubo.dubo.service.DuboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
@@ -31,8 +28,8 @@ public class DuboController {
     }
 
     @GetMapping("/data")
-    public ApiResult<Map<String, List<Combination>>> data() {
-        return new ApiResult<>(duboService.getCache());
+    public ApiResult<DuboMsgResp> data() {
+        return new ApiResult<>(duboService.getDuboMsg());
     }
 
 }

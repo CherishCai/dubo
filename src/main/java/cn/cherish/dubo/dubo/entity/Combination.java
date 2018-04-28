@@ -33,6 +33,15 @@ public class Combination implements Serializable {
 //    @TableField("third")
     private Integer third;
 
+    //    @TableField("thirdEven")
+    private Boolean thirdEven;
+
+    //    @TableField("thirdBig")
+    private Boolean thirdBig;
+
+    //    @TableField("lotteryDateStr")
+    private String lotteryDateStr;
+
 //    @TableField("createdTime")
     private Date createdTime;
 

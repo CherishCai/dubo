@@ -1,5 +1,6 @@
 package cn.cherish.dubo.dubo.service;
 
+import cn.cherish.dubo.dubo.dto.resp.DuboMsgResp;
 import cn.cherish.dubo.dubo.entity.Combination;
 import cn.cherish.dubo.dubo.entity.Term;
 import cn.cherish.dubo.dubo.util.DuboRuleUtils;
@@ -7,11 +8,14 @@ import cn.cherish.dubo.dubo.util.DuboUtils;
 import cn.cherish.dubo.dubo.util.rule.DuboRule;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
@@ -223,14 +227,23 @@ public class DuboService {
     }
 
     public static volatile List<Combination> cacheAllList = new LinkedList<>();
-    public static volatile Map<String, List<Combination>> afterProcessingCache = new HashMap<>();
+    public static volatile Map<String, List<Combination>> allMap = new HashMap<>();
+    public static volatile Map<String, List<Combination>> sub15Map = new HashMap<>();
 
-    public Map<String, List<Combination>> getCache() {
-        return afterProcessingCache;
+    public static volatile Map<String, List<Combination>> todayMap = new HashMap<>();
+    public static volatile Map<String, List<Combination>> todaySub15Map = new HashMap<>();
+
+    public DuboMsgResp getDuboMsg() {
+        return DuboMsgResp.builder()
+                .all(allMap)
+                .sub15(sub15Map)
+                .today(todayMap)
+                .todaySub15(todaySub15Map)
+                .build();
     }
 
     public void dealCache() {
-        DuboUtils.History history = DuboUtils.getHistory(144);
+        DuboUtils.History history = DuboUtils.getHistory(180);
         if (history == null || !history.isSuccess()) {
             return;
         }
@@ -267,17 +280,26 @@ public class DuboService {
 
                     if (ruleFirst.contains(first) && ruleSecond.contains(second)) {
                         // 获取第三个
-                        Integer third = null;
+                        Integer third = 0;
                         if (i + 2 < arr.length) {
                             third = arr[i + 2][j];
                         }
-                        Integer termNum = terms.get(i).getTermNum();
+
+                        Term term = terms.get(i);
+
+                        Integer termNum = term.getTermNum();
 
                         Combination combination = new Combination();
+
+                        combination.setTermNum(termNum);
                         combination.setFirst(first);
                         combination.setSecond(second);
                         combination.setThird(third);
-                        combination.setTermNum(termNum);
+
+                        combination.setThirdEven(third % 2 == 0);
+                        combination.setThirdBig(third > 5);
+
+                        combination.setLotteryDateStr(term.getLotteryDateStr());
                         combination.setCreatedTime(new Date());
 
                         cacheList.add(combination);
@@ -287,6 +309,8 @@ public class DuboService {
 
             }
         }// end big for
+
+        final String todayStr = LocalDate.now().format(DateTimeFormatter.ISO_DATE);
 
         for (DuboRule rule : rules) {
             final List<Integer> ruleFirst = rule.getFirst();
@@ -301,7 +325,17 @@ public class DuboService {
                 String secondStr = Joiner.on("").join(ruleSecond);
                 String mapKey = firstStr + "_" + secondStr;
 
-                afterProcessingCache.put(mapKey, sub15(singleList));
+                allMap.put(mapKey, singleList);
+                sub15Map.put(mapKey, sub15(singleList));
+
+
+                // 过滤得到今天的数据
+                List<Combination> todayList = singleList.stream()
+                        .filter(combination -> StringUtils.equals(todayStr, combination.getLotteryDateStr()))
+                        .collect(Collectors.toList());
+
+                todayMap.put(mapKey, todayList);
+                todaySub15Map.put(mapKey, sub15(todayList));
             }
         }
 
@@ -317,7 +351,17 @@ public class DuboService {
             String secondStr = Joiner.on("").join(ruleSecond);
             String mapKey = firstStr + "_" + secondStr;
 
-            afterProcessingCache.put(mapKey, sub15(blendList));
+            allMap.put(mapKey, blendList);
+            sub15Map.put(mapKey, sub15(blendList));
+
+
+            // 过滤得到今天的数据
+            List<Combination> todayList = blendList.stream()
+                    .filter(combination -> StringUtils.equals(todayStr, combination.getLotteryDateStr()))
+                    .collect(Collectors.toList());
+
+            todayMap.put(mapKey, todayList);
+            todaySub15Map.put(mapKey, sub15(todayList));
         }
         long end = System.currentTimeMillis();
 
