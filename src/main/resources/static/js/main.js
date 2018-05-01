@@ -18,6 +18,8 @@ function syncData(){
             $("#data"+kk).empty();
             $.each(dd, function (index, obj) {
                 var third = obj.third;
+                var second = obj.second;
+                var first = obj.first;
 
                 var even = obj.thirdEven;
 
@@ -55,17 +57,23 @@ function syncData(){
                     }
                 }
 
+                var blue = false;
+                if( (9==first || 7==first) && (1==third || 3==third || 5==third)) {
+                    blue = true;
+                }
+
                 var html = '<div class="datameta">' +
                     '<p class="'+(bigNum>=5 ? "red big-font" : "big-font")+'"><b>' + (big ? "大" : "小") + '</b></p>' +
                     '<p class="'+(evenNum>=5 ? "red big-font" : "big-font")+'"><b>' + (even ? "双" : "单") + '</b></p>' +
-                    '<p class="big-font"><b>' + third + '</b></p>' +
-                    '<p>' + obj.second + '</p>' +
-                    '<p>' + obj.first + '</p>' +
+                    '<p class="'+(blue ? "blue big-font" : "big-font")+'"><b>' + third + '</b></p>' +
+                    '<p>' + second + '</p>' +
+                    '<p>' + first + '</p>' +
                     '<p class="'+(sameTermNumWithPrev ? "red" : "")+'">' + curTermNum + '</p>' +
                     '</div>';
 
                 $("#data"+kk).append(html)
             });
+            $("#data"+kk).append("<b class='big-font'>"+kk+"车</b>")
             $("#data"+kk).append("<hr/>")
         }
     }
