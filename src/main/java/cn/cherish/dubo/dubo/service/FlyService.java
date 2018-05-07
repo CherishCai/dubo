@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
-public class DuboService {
+public class FlyService {
 
     private static final ScheduledExecutorService sch = new ScheduledThreadPoolExecutor(2);
     private static final ScheduledExecutorService schInLoop = new ScheduledThreadPoolExecutor(2);
@@ -36,155 +36,6 @@ public class DuboService {
 
     private static volatile long awardTimeInterval = defaultAwardTimeInterval;
     private static volatile int periodNumber = 0;
-
-    private static volatile int largeTermNumInDB = 0;
-
-    private Callable<Boolean> callable = () -> {
-        DuboService.awardTimeInterval = DuboService.defaultAwardTimeInterval;
-
-        DuboUtils.Current current = DuboUtils.getCurrent();
-        if (current == null) {
-            log.error("callable get DuboUtils.Current is null");
-            return false;
-        }
-
-        int firstPeriod = current.getFirstPeriod();
-
-        int curPeriodNumber = current.getCurrent().getPeriodNumber();
-        long nextAwardTimeInterval = current.getNext().getAwardTimeInterval();
-        log.info("callable curPeriodNumber:{},nextAwardTimeInterval:{}", curPeriodNumber, nextAwardTimeInterval);
-
-        if (nextAwardTimeInterval > 0) {
-            // 需要等待一段时间再去获取
-            DuboService.awardTimeInterval = nextAwardTimeInterval;
-            DuboService.periodNumber = curPeriodNumber;
-            return true;
-        }
-
-        // 此时需要轮询获取数据 直到 periodNumber 被改变
-        boolean loop = true;
-        while (loop) {
-            ScheduledFuture<Boolean> scheduledFuture = schInLoop.schedule(() -> {
-                DuboUtils.Current currentLoop = DuboUtils.getCurrent();
-                if (currentLoop == null) {
-                    log.error("callable:loop get DuboUtils.Current is null");
-                    return false;
-                }
-
-                DuboUtils.Current.Msg loopMsg = currentLoop.getCurrent();
-                log.info("callable:loop get currentLoop:{}", currentLoop);
-
-                int loopPeriodNumber = loopMsg.getPeriodNumber();
-
-                return DuboService.periodNumber != loopPeriodNumber;
-
-            }, 1, TimeUnit.SECONDS);
-
-            try {
-                Boolean result = scheduledFuture.get();
-                log.info("callable:loop result:{}", result);
-                if (result == null) {
-                    result = false;
-                }
-                loop = !result;
-            } catch (Exception e) {
-                log.error("callable:sch error", e);
-                loop = true;
-            }
-        }// end while
-
-        DuboUtils.Current curResult = DuboUtils.getCurrent();
-        if (curResult == null) {
-            log.error("callable:last get DuboUtils.Current is null");
-            return true;
-        }
-
-        DuboService.periodNumber = curResult.getCurrent().getPeriodNumber();
-        String awardNumbers = curResult.getCurrent().getAwardNumbers();
-        log.info("callable awardNumbers:{}", awardNumbers);
-
-        TimeUnit.SECONDS.sleep(5);
-
-//        doSaveTerm();
-
-        return false;
-    };
-
-
-//    @Autowired
-//    TermService termService;
-
-//    @PostConstruct
-    /* public for test*/ public void init() {
-        // 寻找最近的一个
-       /* Term term = termService.findLargeTerm();
-        if (term != null) {
-            largeTermNumInDB = term.getTermNum();
-        }*/
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            schInLoop.shutdown();
-            sch.shutdown();
-        }));
-
-        new Thread(() -> {
-            while (true) {
-                try {
-                    ScheduledFuture<Boolean> future = sch.schedule(callable, awardTimeInterval, TimeUnit.MILLISECONDS);
-                    future.get();
-                } catch (Exception ignore) {}
-                log.info("init:sch periodNumber:{},awardTimeInterval:{}", periodNumber, awardTimeInterval);
-            }
-        }).start();
-
-    }
-
-
-    /*private void doSaveTerm() {
-        log.info("start doSaveTerm");
-        boolean success = false;
-        while (!success) {
-            DuboUtils.History history = DuboUtils.getHistory(15);
-            log.info("doSaveTerm history:{}", history);
-            if (history == null || !history.isSuccess()) {
-                // try again
-                continue;
-            }
-            List<DuboUtils.History.RowsBean> rows = history.getRows();
-            if (CollectionUtils.isEmpty(rows)) {
-                continue;
-            }
-
-            // 寻找最近的一个
-            Term largeTerm = termService.findLargeTerm();
-            if (largeTerm != null) {
-                largeTermNumInDB = largeTerm.getTermNum();
-            }
-
-            for (DuboUtils.History.RowsBean rowsBean : rows) {
-                String termNum = rowsBean.getTermNum();
-                int termNumInt = Integer.parseInt(termNum);
-
-                log.info("largeTermNumInDB:{},termNumInt:{}", largeTermNumInDB, termNumInt);
-                if (largeTermNumInDB >= termNumInt) {
-                    continue;
-                }
-
-                Term newTerm = newTerm(rowsBean);
-
-                try{
-                    log.info("doSaveTerm to insert newTerm:{}", newTerm);
-                    boolean insert = termService.insert(newTerm);
-                    log.info("doSaveTerm to insert result:{}", insert);
-                } catch (Exception e) {
-                    log.error("doSaveTerm error", e);
-                }
-            }
-
-            success = true;
-        }
-
-    }*/
 
     private Term newTerm(DuboUtils.History.RowsBean rowsBean) {
         String termNum = rowsBean.getTermNum();
@@ -212,17 +63,12 @@ public class DuboService {
         return newTerm;
     }
 
-
     /**
      * 每十秒
      */
     @Scheduled(fixedDelay = 10 * 1000, initialDelay = 5 * 1000)
     public void dealData() {
         log.info("dealData every 10 sec");
-
-        // 避免数据遗漏
-//        checkDBData();
-
         // 处理全局缓存
         dealCache();
     }
@@ -234,7 +80,7 @@ public class DuboService {
     public static volatile Map<String, List<Combination>> todayMap = new HashMap<>();
     public static volatile Map<String, List<Combination>> todaySub15Map = new HashMap<>();
 
-    public DuboMsgResp getDuboMsg(String kk) {
+    public DuboMsgResp getMsg(String kk) {
         DuboMsgResp duboMsgResp = null;
         if (DuboMsgType.all.name().equals(kk)) {
             duboMsgResp =  DuboMsgResp.builder()
@@ -264,7 +110,7 @@ public class DuboService {
     }
 
     public void dealCache() {
-        DuboUtils.History history = DuboUtils.getHistory(180);
+        DuboUtils.History history = DuboUtils.getFlyHistory(180);
         if (history == null || !history.isSuccess()) {
             return;
         }
@@ -402,28 +248,6 @@ public class DuboService {
         }
         return combinationList;
     }
-
-    /*private void checkDBData() {
-        DuboUtils.History history = DuboUtils.getHistory(15);
-        if (history != null && history.isSuccess()) {
-            for (DuboUtils.History.RowsBean rowsBean : history.getRows()) {
-                String termNum = rowsBean.getTermNum();
-                int termNumInt = Integer.parseInt(termNum);
-
-                try {
-                    Term byTermNum = termService.findOneByTermNum(termNumInt);
-                    if (byTermNum == null) {
-                        Term newTerm = newTerm(rowsBean);
-                        log.info("doSaveTerm to insert newTerm:{}", newTerm);
-                        boolean insert = termService.insert(newTerm);
-                    }
-                } catch (Exception e) {
-                    log.error("checkDBData error", e);
-                }
-            }
-
-        }
-    }*/
 
 
 }

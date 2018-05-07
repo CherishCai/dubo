@@ -1,6 +1,5 @@
 package cn.cherish.dubo.dubo.util;
 
-import cn.cherish.dubo.dubo.entity.Combination;
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +9,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -55,6 +53,40 @@ public class DuboUtils {
             return JSON.parseObject(body.string(), History.class);
         } catch (Exception e) {
             log.error("getHistory error, url:{}", url, e);
+        }
+        return null;
+    }
+
+    public static History getFlyHistory(int count) {
+        if (count < 1) {
+            count = 1;
+        }
+
+        String t = System.currentTimeMillis() + "" + random.nextInt(9999);
+
+        String url = "http://kai.emw207.com/xyft/getHistoryData.do?count=%s&t=%s";
+
+        url = String.format(url, count, t);
+
+        log.info("getFlyHistory url:{}", url);
+
+        try {
+            Request request = OkHttpClientUtils.getReq(url);
+            OkHttpClient okHttpClient = OkHttpClientUtils.defaultClient();
+
+            Response response = okHttpClient.newCall(request).execute();
+            if (response == null) {
+                log.warn("getFlyHistory response is null, url:{}", url);
+                return null;
+            }
+            ResponseBody body = response.body();
+            if (body == null) {
+                log.warn("getFlyHistory responseBody is null, url:{}", url);
+                return null;
+            }
+            return JSON.parseObject(body.string(), History.class);
+        } catch (Exception e) {
+            log.error("getFlyHistory error, url:{}", url, e);
         }
         return null;
     }

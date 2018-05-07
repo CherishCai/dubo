@@ -22,7 +22,7 @@ public class Combination implements Serializable {
     private Long id;
 
 //    @TableField("termNum")
-    private Integer termNum;
+    private Long termNum;
 
 //    @TableField("first")
     private Integer first;

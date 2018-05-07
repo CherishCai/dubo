@@ -30,7 +30,7 @@ public class Term implements Serializable {
     private Long id;
 
 //    @TableField("termNum")
-    private Integer termNum;
+    private Long termNum;
 
 //    @TableField("termData")
     private String termData;
