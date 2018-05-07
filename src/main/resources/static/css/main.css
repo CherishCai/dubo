@@ -26,6 +26,10 @@
     font-size: 16px;
 }
 
+iframe {
+    min-height: 200px;
+}
+
 .aaaa {
     display: inline-block;
     width: 20%;
