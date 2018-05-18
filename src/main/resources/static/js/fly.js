@@ -1,15 +1,6 @@
 
-
-/*
- * Copyright (c) 2018. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
- */
-
 var dataKey = ["2_79", "2_135","4_79","4_135","7_24","7_6810","9_24","9_6810",
-    "24_79","24_135","79_24","79_6810"];
+    "24_79","24_135","79_24","79_6810","135_6810","6810_135"];
 
 function syncData(){
     var dataKK = $("#dataKK").val();
@@ -17,6 +8,8 @@ function syncData(){
     var result = getAjax(url);
 
     if (result.success) {
+        $("#newestNum").text(result.data.newestNumStr);
+
         for(var k in dataKey){
             var kk = dataKey[k];
 
@@ -81,8 +74,10 @@ function syncData(){
 
                 $("#data"+kk).append(html)
             });
-            $("#data"+kk).append("<b class='big-font'>"+kk+"艇</b>")
-            $("#data"+kk).append("<hr/>")
+            var tmp = "<b class='big-font'>" + kk +
+                "艇&nbsp;&nbsp;最新一期号码：" + result.data.newestNumStr + "</b>";
+            $("#data" + kk).append(tmp);
+            $("#data" + kk).append("<hr/>");
         }
     }
 }

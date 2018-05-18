@@ -21,6 +21,8 @@ public class DuboRuleUtils {
         rules.add(new DuboRule24_135());
         rules.add(new DuboRule79_24());
         rules.add(new DuboRule79_680());
+        rules.add(new DuboRule135_680());
+        rules.add(new DuboRule680_135());
     }
 
     public static List<DuboRule> getRules() {

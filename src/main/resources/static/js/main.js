@@ -1,7 +1,7 @@
 
 
 var dataKey = ["2_79", "2_135","4_79","4_135","7_24","7_6810","9_24","9_6810",
-    "24_79","24_135","79_24","79_6810"];
+    "24_79","24_135","79_24","79_6810","135_6810","6810_135"];
 
 function syncData(){
     var dataKK = $("#dataKK").val();
@@ -9,6 +9,8 @@ function syncData(){
     var result = getAjax(url);
 
     if (result.success) {
+        $("#newestNum").text(result.data.newestNumStr);
+
         for(var k in dataKey){
             var kk = dataKey[k];
 
@@ -73,10 +75,25 @@ function syncData(){
 
                 $("#data"+kk).append(html)
             });
-            $("#data"+kk).append("<b class='big-font'>"+kk+"车</b>")
+            var tmp = "<b class='big-font'>" + kk +
+                "车&nbsp;&nbsp;最新一期号码：" + result.data.newestNumStr + "</br>";
+            $("#data" + kk).append(tmp);
             $("#data"+kk).append("<hr/>")
-        }
+
+        } //end for
+
+        // playMusic();
     }
+}
+
+var music = "http://gddx.sc.chinaz.com/Files/DownLoad/sound1/201803/9821.mp3";
+function playMusic(){
+    //IE9+,Firefox,Chrome均支持<audio/>
+    $('#newMessageDIV').html('<audio autoplay="autoplay"><source src="'+music
+        + '" type="audio/wav"/><source src="'+music+ '" type="audio/mpeg"/></audio>');
+
+    var mm = '<bgsound loop="1" src="'+music+'" />';
+    $('#newMessageDIV').html(mm);
 }
 
 $(function () {

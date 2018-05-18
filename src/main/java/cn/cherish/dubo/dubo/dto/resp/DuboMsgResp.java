@@ -18,6 +18,8 @@ import java.util.Map;
 @Builder
 public class DuboMsgResp {
 
+    private String newestNumStr;
+
     private Map<String, List<Combination>> all;
 
     private Map<String, List<Combination>> sub15;

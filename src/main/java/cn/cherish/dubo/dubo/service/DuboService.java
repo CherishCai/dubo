@@ -227,6 +227,7 @@ public class DuboService {
         dealCache();
     }
 
+    public static volatile String newestNumStr = "";
     public static volatile List<Combination> cacheAllList = new LinkedList<>();
     public static volatile Map<String, List<Combination>> allMap = new HashMap<>();
     public static volatile Map<String, List<Combination>> sub15Map = new HashMap<>();
@@ -236,24 +237,28 @@ public class DuboService {
 
     public DuboMsgResp getDuboMsg(String kk) {
         DuboMsgResp duboMsgResp = null;
+
+        DuboMsgResp.DuboMsgRespBuilder builder = DuboMsgResp.builder();
+        builder.newestNumStr(newestNumStr);
+
         if (DuboMsgType.all.name().equals(kk)) {
-            duboMsgResp =  DuboMsgResp.builder()
+            duboMsgResp =  builder
                     .all(allMap)
                     .build();
         } else if (DuboMsgType.sub15.name().equals(kk)) {
-            duboMsgResp = DuboMsgResp.builder()
+            duboMsgResp = builder
                     .sub15(sub15Map)
                     .build();
         } else if (DuboMsgType.today.name().equals(kk)) {
-            duboMsgResp = DuboMsgResp.builder()
+            duboMsgResp = builder
                     .today(todayMap)
                     .build();
         } else if (DuboMsgType.todaySub15.name().equals(kk)) {
-            duboMsgResp = DuboMsgResp.builder()
+            duboMsgResp = builder
                     .todaySub15(todaySub15Map)
                     .build();
         } else {
-            duboMsgResp = DuboMsgResp.builder()
+            duboMsgResp = builder
                     .all(allMap)
                     .sub15(sub15Map)
                     .today(todayMap)
@@ -272,6 +277,9 @@ public class DuboService {
         long start = System.currentTimeMillis();
 
         List<Term> terms = history.getRows().stream().map(this::newTerm).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(terms)) {
+            newestNumStr = terms.get(0).getTermNum() + "";
+        }
 
         // 从小到大
         terms.sort(Comparator.comparingLong(Term::getTermNum));
