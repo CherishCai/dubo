@@ -64,13 +64,21 @@ function syncData(){
                     blue = true;
                 }
 
+                var curTermNumClass = (sameTermNumWithPrev ? "red" : "");
+                if (kk == "135_6810" || kk == "6810_135"){
+                    curTermNumClass = (sameTermNumWithPrev ? "blue" : "");
+                }
+                var thirdClass = (blue ? "blue big-font" : "big-font");
+                var evenClass = (evenNum>=5 ? "red big-font" : "big-font");
+                var bigClass = (bigNum>=5 ? "red big-font" : "big-font");
+
                 var html = '<div class="datameta">' +
-                    '<p class="'+(bigNum>=5 ? "red big-font" : "big-font")+'"><b>' + (big ? "大" : "小") + '</b></p>' +
-                    '<p class="'+(evenNum>=5 ? "red big-font" : "big-font")+'"><b>' + (even ? "双" : "单") + '</b></p>' +
-                    '<p class="'+(blue ? "blue big-font" : "big-font")+'"><b>' + third + '</b></p>' +
+                    '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
+                    '<p class="'+evenClass+'"><b>' + (even ? "双" : "单") + '</b></p>' +
+                    '<p class="'+thirdClass+'"><b>' + third + '</b></p>' +
                     '<p>' + second + '</p>' +
                     '<p>' + first + '</p>' +
-                    '<p class="'+(sameTermNumWithPrev ? "red" : "")+'">' + curTermNum + '</p>' +
+                    '<p class="'+curTermNumClass+'">' + curTermNum + '</p>' +
                     '</div>';
 
                 $("#data"+kk).append(html)
