@@ -1,0 +1,38 @@
+
+.body-style {
+    min-width: 1080px;font-size: 12px
+}
+
+.data {
+    display: block;
+    min-height: 200px;
+}
+
+.datameta {
+    display: inline-block;
+    border: solid;
+    text-align: center;
+}
+
+.red {
+    color: red;
+}
+
+.blue {
+    color: blue;
+}
+
+.big-font {
+    font-size: 16px;
+}
+
+iframe {
+    min-height: 200px;
+}
+
+.aaaa {
+    display: inline-block;
+    width: 20%;
+    border: solid;
+    margin-right: 30px;
+}
