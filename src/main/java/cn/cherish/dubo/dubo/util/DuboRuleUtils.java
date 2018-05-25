@@ -26,6 +26,7 @@ public class DuboRuleUtils {
         // 1_4 7_2 9_4 9_2 2_9 2_7 4_9 4_7 10_3
         rules.add(new DuboRule1_4());
         rules.add(new DuboRule7_2());
+        rules.add(new DuboRule7_4());
         rules.add(new DuboRule9_4());
         rules.add(new DuboRule9_2());
         rules.add(new DuboRule2_9());

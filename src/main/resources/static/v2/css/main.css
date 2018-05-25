@@ -36,3 +36,11 @@ iframe {
     border: solid;
     margin-right: 30px;
 }
+
+.newestNum {
+    text-align: center;
+    position: fixed;
+    top: 180px;
+    right: 0;
+    color: brown;
+}
