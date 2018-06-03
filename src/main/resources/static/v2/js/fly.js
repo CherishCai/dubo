@@ -68,10 +68,16 @@ function syncData(){
                     blue = true;
                 }
 
-                var curTermNumClass = (sameTermNumWithPrev ? "red" : "");
-                if (kk == "135_6810" || kk == "6810_135"){
-                    curTermNumClass = (sameTermNumWithPrev ? "blue" : "");
+                // termNumClass
+                var curTermNumClass = "";
+                if (curTermNum === newestNumTmp-2) {
+                    curTermNumClass = "pink";
                 }
+                curTermNumClass = (sameTermNumWithPrev ? "red" : curTermNumClass);
+                if (kk == "135_6810" || kk == "6810_135"){
+                    curTermNumClass = (sameTermNumWithPrev ? "blue" : curTermNumClass);
+                }
+
                 var thirdClass = (blue ? "blue big-font" : "big-font");
                 var evenClass = (evenNum>=5 ? "red big-font" : "big-font");
                 var bigClass = (bigNum>=5 ? "red big-font" : "big-font");
@@ -80,7 +86,9 @@ function syncData(){
                 if (newestNumTmp !== newestNum && dd.length === (index+1) && third) {
                     console.log("newestNumTmp:" + newestNumTmp);
                     console.log("newestNum:" + newestNum);
-                    if (evenNum>=5 || bigNum>=5) {
+                    console.log("curTermNum:" + curTermNum);
+                    if (curTermNum === newestNumTmp-2) {
+                        console.log("needPlayAudio");
                         needPlayAudio = true;
                     }
                 }

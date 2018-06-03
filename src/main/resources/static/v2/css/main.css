@@ -15,11 +15,17 @@
 }
 
 .red {
+    font-weight: bold;
     color: red;
 }
 
 .blue {
+    font-weight: bold;
     color: blue;
+}
+.pink {
+    font-weight: bold;
+    color: hotpink;
 }
 
 .big-font {
