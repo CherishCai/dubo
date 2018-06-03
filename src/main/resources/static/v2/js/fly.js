@@ -71,7 +71,7 @@ function syncData(){
                 // termNumClass
                 var curTermNumClass = "";
                 if (curTermNum === newestNumTmp-2) {
-                    curTermNumClass = "pink";
+                    curTermNumClass = "brown";
                 }
                 curTermNumClass = (sameTermNumWithPrev ? "red" : curTermNumClass);
                 if (kk == "135_6810" || kk == "6810_135"){
