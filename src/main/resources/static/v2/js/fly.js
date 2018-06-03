@@ -3,13 +3,17 @@ var dataKey = ["2_79", "2_135","4_79","4_135","7_24","7_6810","9_24","9_6810",
     "24_79","24_135","79_24","79_6810","135_6810","6810_135",
     "1_4","7_2","7_4","9_4","9_2","2_9","2_7","4_9","4_7","10_3"];
 
+var newestNum = null;
+
 function syncData(){
     var dataKK = $("#dataKK").val();
     var url = "/dubo/fly?kk=" + dataKK;
     var result = getAjax(url);
 
+    var needPlayAudio = false;
+
     if (result.success) {
-        $("#newestNum").text(result.data.newestNumStr);
+        var newestNumTmp = result.data.newestNumStr;
 
         for(var k in dataKey){
             var kk = dataKey[k];
@@ -72,6 +76,15 @@ function syncData(){
                 var evenClass = (evenNum>=5 ? "red big-font" : "big-font");
                 var bigClass = (bigNum>=5 ? "red big-font" : "big-font");
 
+                // audio
+                if (newestNumTmp !== newestNum && dd.length === (index+1) && third) {
+                    console.log("newestNumTmp:" + newestNumTmp);
+                    console.log("newestNum:" + newestNum);
+                    if (evenNum>=5 || bigNum>=5) {
+                        needPlayAudio = true;
+                    }
+                }
+
                 var html = '<div class="datameta">' +
                     '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
                     '<p class="'+evenClass+'"><b>' + (even ? "双" : "单") + '</b></p>' +
@@ -83,12 +96,23 @@ function syncData(){
 
                 $("#data"+kk).append(html)
             });
-            var tmp = "<b class='big-font'>" + kk +
-                "艇</b>";
+            var tmp = "<b class='big-font'>" + kk + "艇</b><hr/>";
             $("#data" + kk).append(tmp);
-            $("#data" + kk).append("<hr/>");
         }
+
+        newestNum = newestNumTmp;
+        $("#newestNum").text(newestNum);
     }
+    if (needPlayAudio) {
+        playMusic();
+    }
+}
+
+var music = "http://gddx.sc.chinaz.com/Files/DownLoad/sound1/201803/9821.mp3";
+function playMusic(){
+    //IE9+,Firefox,Chrome均支持<audio/>
+    $('body').append('<audio style="display:none" autoplay="autoplay"><source src="'+music
+        + '" type="audio/wav"/><source src="'+music+ '" type="audio/mpeg"/></audio>');
 }
 
 $(function () {
