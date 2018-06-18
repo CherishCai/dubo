@@ -34,6 +34,10 @@ public class DuboRuleUtils {
         rules.add(new DuboRule4_9());
         rules.add(new DuboRule4_7());
         rules.add(new DuboRule0_3());
+
+
+        rules.add(new DuboRule24_x());
+        rules.add(new DuboRule79_x());
     }
 
     public static List<DuboRule> getRules() {

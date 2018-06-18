@@ -2,7 +2,9 @@
 
 var dataKey = ["2_79", "2_135","4_79","4_135","7_24","7_6810","9_24","9_6810",
     "24_79","24_135","79_24","79_6810","135_6810","6810_135",
-    "1_4","7_2","7_4","9_4","9_2","2_9","2_7","4_9","4_7","10_3"];
+    "1_4","7_2","7_4","9_4","9_2","2_9","2_7","4_9","4_7","10_3",
+    "79_12345678910","24_12345678910"];
+
 
 var newestNum = null;
 
@@ -81,8 +83,12 @@ function syncData(){
 
                 // 第二个数值的颜色
                 var secClass = "black";
-                if ("79_24" == kk) {
-                    secClass = "green";
+                if (
+                    ("79_12345678910" == kk && (2 === second || 4 === second))
+                    ||
+                    ("24_12345678910" == kk && (7 === second || 9 === second))
+                ) {
+                    secClass = "green big-font";
                 }
 
                 var thirdClass = (blue ? "blue big-font" : "big-font");
@@ -108,14 +114,6 @@ function syncData(){
                     '<p>' + first + '</p>' +
                     '<p class="'+curTermNumClass+'">' + curTermNum + '</p>' +
                     '</div>';
-
-                if ("79_24" == kk) {
-                    html = '<div class="datameta">' +
-                        '<p class="'+secClass+'">' + second + '</p>' +
-                        '<p>' + first + '</p>' +
-                        '<p class="'+curTermNumClass+'">' + curTermNum + '</p>' +
-                        '</div>';
-                }
 
                 $("#data"+kk).append(html)
             });
