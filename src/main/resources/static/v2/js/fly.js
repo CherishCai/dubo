@@ -114,6 +114,16 @@ function syncData(){
                     '<p class="'+curTermNumClass+'">' + curTermNum + '</p>' +
                     '</div>';
 
+                if (
+                    "79_12345678910" == kk || "24_12345678910" == kk
+                ) {
+                    html = '<div class="datameta">' +
+                        '<p class="'+secClass+'">' + second + '</p>' +
+                        '<p>' + first + '</p>' +
+                        '<p class="'+curTermNumClass+'">' + curTermNum + '</p>' +
+                        '</div>';
+                }
+
                 $("#data"+kk).append(html)
             });
             var tmp = "<b class='big-font'>" + kk + "艇</b><hr/>";
