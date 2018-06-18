@@ -15,8 +15,8 @@ function syncData(){
     if (result.success) {
         var newestNumTmp = result.data.newestNumStr;
 
-        for(var k in dataKey){
-            var kk = dataKey[k];
+        for(var i in dataKey){
+            var kk = dataKey[i];
 
             var data = result.data[dataKK];
             var dd = data[kk];
@@ -78,6 +78,12 @@ function syncData(){
                     curTermNumClass = (sameTermNumWithPrev ? "blue" : curTermNumClass);
                 }
 
+                // 第二个数值的颜色
+                var secClass = "black";
+                if ("79_24" == kk) {
+                    secClass = "green";
+                }
+
                 var thirdClass = (blue ? "blue big-font" : "big-font");
                 var evenClass = (evenNum>=5 ? "red big-font" : "big-font");
                 var bigClass = (bigNum>=5 ? "red big-font" : "big-font");
@@ -97,10 +103,18 @@ function syncData(){
                     '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
                     '<p class="'+evenClass+'"><b>' + (even ? "双" : "单") + '</b></p>' +
                     '<p class="'+thirdClass+'"><b>' + third + '</b></p>' +
-                    '<p>' + second + '</p>' +
+                    '<p class="'+secClass+'">' + second + '</p>' +
                     '<p>' + first + '</p>' +
                     '<p class="'+curTermNumClass+'">' + curTermNum + '</p>' +
                     '</div>';
+
+                if ("79_24" == kk) {
+                    html = '<div class="datameta">' +
+                        '<p class="'+secClass+'">' + second + '</p>' +
+                        '<p>' + first + '</p>' +
+                        '<p class="'+curTermNumClass+'">' + curTermNum + '</p>' +
+                        '</div>';
+                }
 
                 $("#data"+kk).append(html)
             });
