@@ -96,13 +96,41 @@ function syncData(){
                 var bigClass = (bigNum>=5 ? "red big-font" : "big-font");
 
                 // audio
-                if (newestNumTmp !== newestNum && dd.length === (index+1) && third) {
+                /*if (newestNumTmp !== newestNum && dd.length === (index+1) && third) {
                     console.log("newestNumTmp:" + newestNumTmp);
                     console.log("newestNum:" + newestNum);
                     console.log("curTermNum:" + curTermNum);
                     if (curTermNum === newestNumTmp-2) {
                         console.log("needPlayAudio");
                         needPlayAudio = true;
+                    }
+                }*/
+                var k79_24 = (kk === "79_12345678910" || kk === "24_12345678910");
+                if (newestNumTmp !== newestNum && dd.length === (index+1) && k79_24) {
+                    console.log("newestNumTmp:" + newestNumTmp);
+                    console.log("newestNum:" + newestNum);
+                    console.log("curTermNum:" + curTermNum);
+
+                    var dLast2 = dd[dd.length - 2];
+                    if (curTermNum === newestNumTmp - 1 && dLast2.termNum === curTermNum) {
+
+                        if (7 === first || 9 === first) {
+                            if (
+                                (2 === second || 4 === second)
+                                && (2 === dLast2.second || 4 === dLast2.second)
+                            ) {
+                                console.log("needPlayAudio");
+                                needPlayAudio = true;
+                            }
+                        } else if (2 === first || 4 === first) {
+                            if (
+                                (7 === second || 9 === second)
+                                && (7 === dLast2.second || 9 === dLast2.second)
+                            ) {
+                                console.log("needPlayAudio");
+                                needPlayAudio = true;
+                            }
+                        }
                     }
                 }
 
