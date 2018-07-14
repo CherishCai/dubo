@@ -3,6 +3,8 @@ package cn.cherish.dubo.dubo.controller;
 import cn.cherish.dubo.dubo.dto.resp.DuboMsgResp;
 import cn.cherish.dubo.dubo.service.DuboService;
 import cn.cherish.dubo.dubo.service.FlyService;
+import cn.cherish.dubo.dubo.util.SMSUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @author Cherish
  * @since 2018-04-26
  */
+@Slf4j
 @RestController
 @RequestMapping("/dubo")
 @CrossOrigin("*")
@@ -29,12 +32,22 @@ public class DuboController {
 
     @GetMapping("/data")
     public ApiResult<DuboMsgResp> data(@RequestParam(required = false) String kk) {
-        return new ApiResult<>(duboService.getDuboMsg(kk));
+        return new ApiResult<>(duboService.getMsg(kk));
     }
 
     @GetMapping("/fly")
     public ApiResult<DuboMsgResp> fly(@RequestParam(required = false) String kk) {
         return new ApiResult<>(flyService.getMsg(kk));
+    }
+
+    @GetMapping("/sendSMS")
+    public void sendSMS(@RequestParam(required = false) String kk) {
+        try {
+            boolean send = SMSUtils.send(SMSUtils.phones, kk + SMSUtils.randomCode());
+            log.info("send SMS by req, result:{}", send);
+        } catch (Exception e) {
+            log.error("send SMS by req error", e);
+        }
     }
 
 }

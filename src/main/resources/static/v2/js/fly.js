@@ -163,7 +163,13 @@ function syncData(){
     }
     if (needPlayAudio) {
         playMusic();
+        sendSMS();
     }
+}
+
+function sendSMS() {
+    var url = "/dubo/sendSMS?kk=fly";
+    var result = getAjax(url);
 }
 
 var music = "http://gddx.sc.chinaz.com/Files/DownLoad/sound1/201803/9821.mp3";
