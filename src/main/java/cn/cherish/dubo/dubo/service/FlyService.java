@@ -23,6 +23,8 @@ public class FlyService extends AbstractService {
     private static volatile long awardTimeInterval = defaultAwardTimeInterval;
     private static volatile int periodNumber = 0;
 
+    public volatile String type = "fly";
+
     /**
      * 每十秒
      */

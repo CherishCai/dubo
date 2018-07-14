@@ -125,6 +125,8 @@ public class DuboService extends AbstractService {
 
     }
 
+    public volatile String type = "car";
+
     /**
      * 每十秒
      */
