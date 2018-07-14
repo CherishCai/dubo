@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @UtilityClass
 public class SMSUtils {
 
-    public static Set<String> phones = Sets.newHashSet("18826137274", "15992658008");
+    public static Set<String> phones = Sets.newHashSet("15992658008");
 
     private static final ThreadLocalRandom RANDOM = ThreadLocalRandom.current();
 
