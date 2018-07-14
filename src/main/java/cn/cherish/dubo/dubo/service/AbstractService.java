@@ -249,13 +249,13 @@ public abstract class AbstractService {
     protected boolean checkAndSendSms(String termData){
         String[] split = termData.split(SPILT);
         int plus12 = Integer.valueOf(split[0]) + Integer.valueOf(split[1]);
-        int[] ints = new int[]{3, 4, 18, 19};
+        Integer[] ints = new Integer[]{3, 4, 18, 19};
         for (int i : ints) {
             if (plus12 != i) {
                 continue;
             }
             try {
-                boolean send = SMSUtils.send(SMSUtils.phones, type + SMSUtils.randomCode());
+                boolean send = SMSUtils.send(SMSUtils.phones, type + Joiner.on("").join(ints));
                 log.info("send SMS, result:{}", send);
             } catch (Exception e) {
                 log.error("send SMS error", e);
