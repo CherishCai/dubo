@@ -51,7 +51,7 @@ public abstract class AbstractService {
     public TermCacheResp getTermsCache(){
         List<Term> list = termsCache;
         if (!CollectionUtils.isEmpty(list)) {
-            list = list.subList(0, 15);
+            list = list.subList(0, 8);
         }
         return TermCacheResp.builder().newestNumStr(newestNumStr).records(list).build();
     }

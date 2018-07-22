@@ -78,6 +78,12 @@ function syncData(){
                 if (!small) {
                     const oddBlue = serialOdd >= 5;
                     if (oddBlue) {
+                        // console.log("newestNum:" + newestNum);
+                        // console.log("newestNumTmp:" + newestNumTmp);
+                        if(4===k && newestNumTmp!= newestNum) {
+                            needPlayAudio = true;
+                            console.log("needPlayAudio");
+                        }
                         oddHTML = "<span class='blue'>"+oddHTML+"</span>"
                     }
                 }
@@ -86,12 +92,18 @@ function syncData(){
                 if (odd) {
                     const smallGreen = serialSmall >= 5;
                     if (smallGreen) {
+                        // console.log("newestNum:" + newestNum);
+                        // console.log("newestNumTmp:" + newestNumTmp);
+                        if(4===k && newestNumTmp!= newestNum) {
+                            needPlayAudio = true;
+                            console.log("needPlayAudio");
+                        }
                         bigHTML = "<span class='violet'>"+bigHTML+"</span>"
                     }
                 }
 
                 // console.log(i+"|"+k + ": 单双" + serialOdd);
-                console.log(i+"|"+k + s+": 大小" + serialSmall);
+                // console.log(i+"|"+k + s+": 大小" + serialSmall);
 
                 var html = "<p> " + termVal + oddHTML + bigHTML + "</p>";
 
@@ -126,7 +138,7 @@ function oddEvenHtml(oddEven) {
 }
 
 function sendSMS() {
-    var url = "/dubo/sendSMS?kk=car";
+    var url = "/dubo/sendSMS?kk=fly单双";
     var result = getAjax(url);
 }
 
