@@ -13,6 +13,7 @@ function syncData(){
     var result = getAjax(url);
 
     var needPlayAudio = false;
+    var needSendSMS = false;
 
     if (result.success) {
         var newestNumTmp = result.data.newestNumStr;
@@ -120,6 +121,10 @@ function syncData(){
                             ) {
                                 console.log("needPlayAudio");
                                 needPlayAudio = true;
+                                if(newestNum !== null){
+                                    needSendSMS = true;
+                                }
+
                             }
                         } else if (2 === first || 4 === first) {
                             if (
@@ -128,6 +133,9 @@ function syncData(){
                             ) {
                                 console.log("needPlayAudio");
                                 needPlayAudio = true;
+                                if(newestNum !== null){
+                                    needSendSMS = true;
+                                }
                             }
                         }
                     }
@@ -163,6 +171,8 @@ function syncData(){
     }
     if (needPlayAudio) {
         playMusic();
+    }
+    if (needSendSMS) {
         sendSMS();
     }
 }

@@ -7,6 +7,7 @@ function syncData(){
     var result = getAjax(url);
 
     var needPlayAudio = false;
+    var needSendSMS = false;
 
     if (result.success) {
         const newestNumTmp = result.data.newestNumStr;
@@ -83,6 +84,9 @@ function syncData(){
                         if(4===k && newestNumTmp!= newestNum) {
                             needPlayAudio = true;
                             console.log("needPlayAudio");
+                            if(newestNum !== null){
+                                needSendSMS = true;
+                            }
                         }
                         oddHTML = "<span class='blue'>"+oddHTML+"</span>"
                     }
@@ -97,6 +101,9 @@ function syncData(){
                         if(4===k && newestNumTmp!= newestNum) {
                             needPlayAudio = true;
                             console.log("needPlayAudio");
+                            if(newestNum !== null){
+                                needSendSMS = true;
+                            }
                         }
                         bigHTML = "<span class='violet'>"+bigHTML+"</span>"
                     }
@@ -116,9 +123,10 @@ function syncData(){
         newestNum = newestNumTmp;
         $("#newestNum").text(newestNum);
     }
-
     if (needPlayAudio) {
         playMusic();
+    }
+    if (needSendSMS) {
         sendSMS();
     }
 }
