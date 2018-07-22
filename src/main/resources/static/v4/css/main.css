@@ -1,0 +1,56 @@
+
+.body-style {
+    min-width: 1080px;font-size: 12px
+}
+
+.data {
+    display: block;
+    min-height: 200px;
+}
+
+.datameta {
+    display: inline-block;
+    border: solid;
+    text-align: center;
+}
+
+.red {
+    font-weight: bold;
+    color: red;
+}
+
+.blue {
+    font-weight: bold;
+    color: blue;
+}
+.brown {
+    font-weight: bold;
+    color: brown;
+}
+.green {
+    font-weight: bold;
+    color: green;
+}
+
+.big-font {
+    font-size: 16px;
+}
+
+iframe {
+    min-height: 200px;
+}
+
+.aaaa {
+    display: inline-block;
+    width: 10%;
+    border: solid;
+    margin-right: 10px;
+}
+
+.newestNum {
+    text-align: center;
+    position: fixed;
+    top: 180px;
+    right: 80px;
+    color: brown;
+}

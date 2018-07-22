@@ -47,11 +47,15 @@ public abstract class AbstractService {
     public volatile Map<String, List<Combination>> todayMap = new HashMap<>();
     public volatile Map<String, List<Combination>> todaySub15Map = new HashMap<>();
     public volatile List<Term> termsCache = Collections.emptyList();
+    public volatile List<Term> termsCachev4 = Collections.emptyList();
 
     public TermCacheResp getTermsCache(){
-        List<Term> list = termsCache;
+        List<Term> list = termsCachev4;
         if (!CollectionUtils.isEmpty(list)) {
-            list = list.subList(0, 40);
+            list = list.stream().sorted(Comparator.comparingLong(Term::getTermNum)).collect(Collectors.toList());
+
+            int size = list.size();
+            list = list.subList(size-80, size);
         }
         return TermCacheResp.builder().newestNumStr(newestNumStr).records(list).build();
     }
@@ -129,10 +133,38 @@ public abstract class AbstractService {
             return;
         }
 
+        if (!CollectionUtils.isEmpty(termsCache)) {
+            if (termsCache.get(0).getTermNum().equals(terms.get(0).getTermNum())) {
+                return;
+            }
+        }
+
         {
             // cache
             termsCache = history.getRows().stream().map(this::newTerm).collect(Collectors.toList());
         }
+
+        v1data(history.getRows().stream().map(this::newTerm).collect(Collectors.toList()));
+        v4data(history.getRows().stream().map(this::newTerm).collect(Collectors.toList()));
+    }
+
+    private void v4data(List<Term> terms) {
+
+        termsCachev4 = terms.stream().peek(term -> {
+            Integer[] termDataArr = term.getTermDataArr();
+            int len = termDataArr.length;
+            Integer[] newArr = new Integer[len * 3];
+            for (int i = 0; i < len; i++) {
+                newArr[i * 3] = termDataArr[i];
+                newArr[i * 3 + 1] = termDataArr[i] % 2 == 0 ? 0 : 1;
+                newArr[i * 3 + 2] = termDataArr[i] <= 5 ? 0 : 1;
+            }
+            term.setTermDataArr(newArr);
+
+        }).collect(Collectors.toList());
+    }
+
+    private void v1data(List<Term> terms) {
         Term newestTerm = terms.get(0);
         String mTermNum = String.valueOf(newestTerm.getTermNum());
         newestNumChange = !StringUtils.equals(mTermNum, newestNumStr);
