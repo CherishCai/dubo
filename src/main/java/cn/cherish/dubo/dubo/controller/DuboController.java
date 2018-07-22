@@ -40,6 +40,16 @@ public class DuboController {
         return new ApiResult<>(flyService.getMsg(kk));
     }
 
+    @GetMapping("/cars/term/cache")
+    public ApiResult<?> termCache() {
+        return new ApiResult<>(duboService.getTermsCache());
+    }
+
+    @GetMapping("/flys/term/cache")
+    public ApiResult<?> flyTermCache() {
+        return new ApiResult<>(flyService.getTermsCache());
+    }
+
     @GetMapping("/sendSMS")
     public void sendSMS(@RequestParam(required = false) String kk) {
         try {

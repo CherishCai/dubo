@@ -1,0 +1,10 @@
+
+
+
+#content .row {
+    width: 9.5%;
+    float: left;
+    font-size: 14px;
+    border-right: dotted;
+    padding-left: 2px;
+}

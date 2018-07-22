@@ -2,17 +2,20 @@ package cn.cherish.dubo.dubo.service;
 
 import cn.cherish.dubo.dubo.constant.DuboMsgType;
 import cn.cherish.dubo.dubo.dto.resp.DuboMsgResp;
+import cn.cherish.dubo.dubo.dto.resp.TermCacheResp;
 import cn.cherish.dubo.dubo.entity.Combination;
 import cn.cherish.dubo.dubo.entity.Term;
 import cn.cherish.dubo.dubo.util.DuboRuleUtils;
 import cn.cherish.dubo.dubo.util.DuboUtils;
 import cn.cherish.dubo.dubo.util.DuboUtils.History;
+import cn.cherish.dubo.dubo.util.IntUtils;
 import cn.cherish.dubo.dubo.util.SMSUtils;
 import cn.cherish.dubo.dubo.util.rule.DuboRule;
 import com.google.common.base.Joiner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +46,15 @@ public abstract class AbstractService {
 
     public volatile Map<String, List<Combination>> todayMap = new HashMap<>();
     public volatile Map<String, List<Combination>> todaySub15Map = new HashMap<>();
+    public volatile List<Term> termsCache = Collections.emptyList();
+
+    public TermCacheResp getTermsCache(){
+        List<Term> list = termsCache;
+        if (!CollectionUtils.isEmpty(list)) {
+            list = list.subList(0, 15);
+        }
+        return TermCacheResp.builder().newestNumStr(newestNumStr).records(list).build();
+    }
 
     public DuboMsgResp getMsg(String kk) {
         DuboMsgResp duboMsgResp = null;
@@ -99,7 +111,12 @@ public abstract class AbstractService {
         sb.append(rowsBean.getN9()).append(SPILT);
         sb.append(rowsBean.getN10());
 
-        newTerm.setTermData(sb.toString());
+        String termStr = sb.toString();
+        String[] split = termStr.split(SPILT);
+        Integer[] ints = IntUtils.strToInts(split);
+
+        newTerm.setTermDataArr(ints);
+        newTerm.setTermData(termStr);
         return newTerm;
     }
 
@@ -112,6 +129,10 @@ public abstract class AbstractService {
             return;
         }
 
+        {
+            // cache
+            termsCache = history.getRows().stream().map(this::newTerm).collect(Collectors.toList());
+        }
         Term newestTerm = terms.get(0);
         String mTermNum = String.valueOf(newestTerm.getTermNum());
         newestNumChange = !StringUtils.equals(mTermNum, newestNumStr);
