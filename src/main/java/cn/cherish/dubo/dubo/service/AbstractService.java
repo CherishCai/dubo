@@ -53,9 +53,6 @@ public abstract class AbstractService {
         List<Term> list = termsCachev4;
         if (!CollectionUtils.isEmpty(list)) {
             list = list.stream().sorted(Comparator.comparingLong(Term::getTermNum)).collect(Collectors.toList());
-
-            int size = list.size();
-            list = list.subList(size-80, size);
         }
         return TermCacheResp.builder().newestNumStr(newestNumStr).records(list).build();
     }

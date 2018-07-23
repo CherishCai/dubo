@@ -33,25 +33,37 @@ function syncData(){
                 var big = termDataArr[r*3+2];// 大小： 0 小 1大
 
                 // 处理单数
-                if (big && c+1<len){
-                    var term1 =list[c+1];
+                if (big){
+                    if(c+1===len){
+                        var html = '<div class="datameta">' +
+                            '<p><b>null</b></p>' +
+                            '<p><b>null</b></p>' +
+                            '<p>' + termVal + '</p>' +
+                            '<p>' + curTermNum + '</p>' +
+                            '</div>';
 
-                    var termDataArr1 = term1.termDataArr;
-                    var termVal1 = termDataArr1[r*3];
-                    var odd1 = termDataArr1[r*3+1];// 单双： 0 双 1单
-                    var big1 = termDataArr1[r*3+2];// 大小： 0 小 1大
+                        $("#dataRow"+r).append(html)
+                    }else{
 
-                    var bigClass = '';
-                    var oddClass = '';
+                        var term1 =list[c+1];
 
-                    var html = '<div class="datameta">' +
-                        '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
-                        '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
-                        '<p>' + termVal + '</p>' +
-                        '<p>' + curTermNum + '</p>' +
-                        '</div>';
+                        var termDataArr1 = term1.termDataArr;
+                        var termVal1 = termDataArr1[r*3];
+                        var odd1 = termDataArr1[r*3+1];// 单双： 0 双 1单
+                        var big1 = termDataArr1[r*3+2];// 大小： 0 小 1大
 
-                    $("#dataRow"+r).append(html)
+                        var bigClass = '';
+                        var oddClass = '';
+
+                        var html = '<div class="datameta">' +
+                            '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
+                            '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
+                            '<p>' + termVal + '</p>' +
+                            '<p>' + curTermNum + '</p>' +
+                            '</div>';
+
+                        $("#dataRow" + r).append(html);
+                    }//end else
                 }
 
             }
