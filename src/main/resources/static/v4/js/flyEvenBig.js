@@ -52,8 +52,8 @@ function syncData(){
                         var odd1 = termDataArr1[r*3+1];// 单双： 0 双 1单
                         var big1 = termDataArr1[r*3+2];// 大小： 0 小 1大
 
-                        var bigClass = '';
-                        var oddClass = '';
+                        var bigClass = 'big-font';
+                        var oddClass = 'big-font';
 
                         var html = '<div class="datameta">' +
                             '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
