@@ -56,7 +56,7 @@ function syncData(){
                         var oddClass = 'big-font';
 
                         var html = '<div class="datameta">' +
-                            '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
+                            // '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
                             '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
                             '<p>' + termVal + '</p>' +
                             '<p>' + curTermNum + '</p>' +
