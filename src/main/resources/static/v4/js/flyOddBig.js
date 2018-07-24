@@ -37,7 +37,6 @@ function syncData(){
                     if(c+1===len){
                         var html = '<div class="datameta">' +
                             '<p><b>null</b></p>' +
-                            '<p><b>null</b></p>' +
                             '<p>' + termVal + '</p>' +
                             '<p>' + curTermNum + '</p>' +
                             '</div>';
@@ -57,7 +56,7 @@ function syncData(){
 
                         var html = '<div class="datameta">' +
                             // '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
-                            '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
+                            '<p class="'+bigClass+'"><b>' + (big1 ? "大" : "小") + '</b></p>' +
                             '<p>' + termVal + '</p>' +
                             '<p>' + curTermNum + '</p>' +
                             '</div>';

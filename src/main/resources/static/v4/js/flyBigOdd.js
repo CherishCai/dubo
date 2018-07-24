@@ -37,7 +37,6 @@ function syncData(){
                     if(c+1===len){
                         var html = '<div class="datameta">' +
                             '<p><b>null</b></p>' +
-                            '<p><b>null</b></p>' +
                             '<p>' + termVal + '</p>' +
                             '<p>' + curTermNum + '</p>' +
                             '</div>';
