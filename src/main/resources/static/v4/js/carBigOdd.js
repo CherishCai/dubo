@@ -63,8 +63,8 @@ function syncData(){
                             count = 1;
                         }
                         lastStage = odd1;
-                        var bigClass = count >= 6 ? 'big-font red' : 'big-font';
-                        var oddClass = count >= 6 ? 'big-font red' : 'big-font';
+                        var bigClass = count >= 5 ? 'big-font red' : 'big-font';
+                        var oddClass = count >= 5 ? 'big-font red' : 'big-font';
 
                         // needPlayAudio
                         if ((count === 6 || count === 12)
