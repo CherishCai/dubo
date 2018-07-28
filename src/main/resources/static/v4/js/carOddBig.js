@@ -22,6 +22,8 @@ function syncData(){
         for(var r =0; r < w; r++){
             $("#dataRow"+r).empty();
 
+            var count = 0;
+            var lastStage = 0;
             for (var c=0; c < len; c++) {
 
                 var term = list[c];
@@ -51,8 +53,14 @@ function syncData(){
                         var odd1 = termDataArr1[r*3+1];// 单双： 0 双 1单
                         var big1 = termDataArr1[r*3+2];// 大小： 0 小 1大
 
-                        var bigClass = 'big-font';
-                        var oddClass = 'big-font';
+                        if (lastStage === big1) {
+                            count++;
+                        } else {
+                            count = 1;
+                        }
+                        lastStage = big1;
+                        var bigClass = count >= 5 ? 'big-font red' : 'big-font';
+                        var oddClass = count >= 5 ? 'big-font red' : 'big-font';
 
                         var html = '<div class="datameta">' +
                             // '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +

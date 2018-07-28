@@ -92,6 +92,9 @@ public abstract class AbstractService {
 
     protected Term newTerm(DuboUtils.History.RowsBean rowsBean) {
         String termNum = rowsBean.getTermNum();
+        if (termNum.length() > 6) {
+            termNum = termNum.substring(6);
+        }
         long termNumLong = Long.parseLong(termNum);
 
         Term newTerm = new Term();
