@@ -148,8 +148,8 @@ public abstract class AbstractService {
         v4data(history.getRows().stream().map(this::newTerm).collect(Collectors.toList()));
 
         afterDealHistory(
-            history.getRows().stream().map(this::newTerm)
-            .sorted(Comparator.comparingLong(Term::getTermNum))
+            termsCachev4.stream()
+                .sorted(Comparator.comparingLong(Term::getTermNum))
                 .collect(Collectors.toList())
         );
     }
