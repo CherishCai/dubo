@@ -12,6 +12,10 @@ function syncData(){
 
     if (result.success) {
         var newestNumTmp = result.data.newestNumStr;
+        if (newestNumTmp === newestNum) {
+            console.log("not need to flush");
+            return;
+        }
 
         var list = result.data.records;
         var len = list.length;
@@ -62,6 +66,13 @@ function syncData(){
                         var bigClass = count >= 5 ? 'big-font red' : 'big-font';
                         var oddClass = count >= 5 ? 'big-font red' : 'big-font';
 
+                        // needPlayAudio
+                        if ((count === 6 || count === 12)
+                            && parseInt(newestNumTmp) === parseInt(curTermNum) + 1
+                        ) {
+                            needPlayAudio = true;
+                        }
+
                         var html = '<div class="datameta">' +
                             '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
                             // '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
@@ -83,9 +94,9 @@ function syncData(){
         $("#newestNum").text(newestNum);
 
     }
+    console.log("needPlayAudio:" + needPlayAudio);
     if (needPlayAudio) {
         playMusic();
-        sendSMS();
     }
 }
 

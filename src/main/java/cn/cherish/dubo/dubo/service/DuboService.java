@@ -1,6 +1,11 @@
 package cn.cherish.dubo.dubo.service;
 
+import cn.cherish.dubo.dubo.entity.Term;
 import cn.cherish.dubo.dubo.util.DuboUtils;
+import cn.cherish.dubo.dubo.util.SMSUtils;
+import com.aliyuncs.exceptions.ClientException;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -9,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author Cherish
@@ -19,8 +25,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class DuboService extends AbstractService {
 
-    private static final ScheduledExecutorService sch = new ScheduledThreadPoolExecutor(2);
-    private static final ScheduledExecutorService schInLoop = new ScheduledThreadPoolExecutor(2);
+//    private static final ScheduledExecutorService sch = new ScheduledThreadPoolExecutor(2);
+//    private static final ScheduledExecutorService schInLoop = new ScheduledThreadPoolExecutor(2);
     private static final long defaultAwardTimeInterval = 1000L;
 
     private static volatile long awardTimeInterval = defaultAwardTimeInterval;
@@ -28,7 +34,7 @@ public class DuboService extends AbstractService {
 
     private static volatile int largeTermNumInDB = 0;
 
-    private Callable<Boolean> callable = () -> {
+   /* private Callable<Boolean> callable = () -> {
         DuboService.awardTimeInterval = DuboService.defaultAwardTimeInterval;
 
         DuboUtils.Current current = DuboUtils.getCurrent();
@@ -101,12 +107,12 @@ public class DuboService extends AbstractService {
 
 
 //    @PostConstruct
-    /* public for test*/ public void init() {
+    *//* public for test*//* public void init() {
         // 寻找最近的一个
-       /* Term term = termService.findLargeTerm();
+       *//* Term term = termService.findLargeTerm();
         if (term != null) {
             largeTermNumInDB = term.getTermNum();
-        }*/
+        }*//*
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             schInLoop.shutdown();
@@ -123,7 +129,7 @@ public class DuboService extends AbstractService {
             }
         }).start();
 
-    }
+    }*/
 
     public volatile String type = "car";
 
@@ -151,5 +157,236 @@ public class DuboService extends AbstractService {
         log.info("deal in cache use {}ms", (end - start));
     }
 
+    private static boolean needSendSMS = false;
+    private static int tipNum1 = 6;
+    private static int tipNum2 = 12;
+    @Override
+    protected void afterDealHistory() {
+        List<Term> list = this.termsCachev4;
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+        bigOdd();
+        evenBig();
+        oddBig();
+        smallOdd();
+
+        if (needSendSMS) {
+            try {
+                SMSUtils.send(SMSUtils.phones2, "C612");
+            } catch (ClientException e) {
+                log.error("send sms error", e);
+            }
+
+        }
+        needSendSMS = false;
+    }
+
+    private void oddBig() {
+        List<Term> list = this.termsCachev4;
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+        int len = list.size();
+        int wid = list.get(0).getTermDataArr().length;
+        int w = wid / 3;
+
+        for (int r = 0; r < w; r++) {
+            int count = 0;
+            int lastStage = 0;
+
+            for (int c = 0; c < len-1; c++) {
+                Term term = list.get(c);
+                Long curTermNum = term.getTermNum();
+
+                Integer[] termDataArr = term.getTermDataArr();
+                Integer termVal = termDataArr[r * 3];
+                // 单双： 0 双 1单
+                Integer odd = termDataArr[r * 3 + 1];
+                // 大小： 0 小 1大
+                Integer big = termDataArr[r * 3 + 2];
+
+                if (odd > 0) {
+                    Term term1 = list.get(c + 1);
+
+                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer termVal1 = termDataArr1[r * 3];
+                    // 单双： 0 双 1单
+                    Integer odd1 = termDataArr1[r * 3 + 1];
+                    // 大小： 0 小 1大
+                    Integer big1 = termDataArr1[r * 3 + 2];
+
+                    if (lastStage == big1) {
+                        count++;
+                    } else {
+                        count = 1;
+                    }
+                    lastStage = big1;
+
+                    if ((count == tipNum1 || count == tipNum2)
+                        && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
+                        needSendSMS = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void evenBig() {
+        List<Term> list = this.termsCachev4;
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+        int len = list.size();
+        int wid = list.get(0).getTermDataArr().length;
+        int w = wid / 3;
+
+        for (int r = 0; r < w; r++) {
+            int count = 0;
+            int lastStage = 0;
+
+            for (int c = 0; c < len-1; c++) {
+                Term term = list.get(c);
+                Long curTermNum = term.getTermNum();
+
+                Integer[] termDataArr = term.getTermDataArr();
+                Integer termVal = termDataArr[r * 3];
+                // 单双： 0 双 1单
+                Integer odd = termDataArr[r * 3 + 1];
+                // 大小： 0 小 1大
+                Integer big = termDataArr[r * 3 + 2];
+
+                if (odd == 0) {
+                    Term term1 = list.get(c + 1);
+
+                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer termVal1 = termDataArr1[r * 3];
+                    // 单双： 0 双 1单
+                    Integer odd1 = termDataArr1[r * 3 + 1];
+                    // 大小： 0 小 1大
+                    Integer big1 = termDataArr1[r * 3 + 2];
+
+                    if (lastStage == big1) {
+                        count++;
+                    } else {
+                        count = 1;
+                    }
+                    lastStage = big1;
+
+                    if ((count == tipNum1 || count == tipNum2)
+                        && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
+                        needSendSMS = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void bigOdd() {
+        List<Term> list = this.termsCachev4;
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+        int len = list.size();
+        int wid = list.get(0).getTermDataArr().length;
+        int w = wid / 3;
+
+        for (int r = 0; r < w; r++) {
+            int count = 0;
+            int lastStage = 0;
+
+            for (int c = 0; c < len-1; c++) {
+                Term term = list.get(c);
+                Long curTermNum = term.getTermNum();
+
+                Integer[] termDataArr = term.getTermDataArr();
+                Integer termVal = termDataArr[r * 3];
+                // 单双： 0 双 1单
+                Integer odd = termDataArr[r * 3 + 1];
+                // 大小： 0 小 1大
+                Integer big = termDataArr[r * 3 + 2];
+
+                // 处理大数
+                if (big > 0) {
+                    Term term1 = list.get(c + 1);
+
+                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer termVal1 = termDataArr1[r * 3];
+                    // 单双： 0 双 1单
+                    Integer odd1 = termDataArr1[r * 3 + 1];
+                    // 大小： 0 小 1大
+                    Integer big1 = termDataArr1[r * 3 + 2];
+
+                    if (lastStage == odd1) {
+                        count++;
+                    } else {
+                        count = 1;
+                    }
+                    lastStage = odd1;
+
+                    if ((count == tipNum1 || count == tipNum2)
+                        && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
+                        needSendSMS = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void smallOdd() {
+        List<Term> list = this.termsCachev4;
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+        int len = list.size();
+        int wid = list.get(0).getTermDataArr().length;
+        int w = wid / 3;
+
+        for (int r = 0; r < w; r++) {
+            int count = 0;
+            int lastStage = 0;
+
+            for (int c = 0; c < len-1; c++) {
+                Term term = list.get(c);
+                Long curTermNum = term.getTermNum();
+
+                Integer[] termDataArr = term.getTermDataArr();
+                Integer termVal = termDataArr[r * 3];
+                // 单双： 0 双 1单
+                Integer odd = termDataArr[r * 3 + 1];
+                // 大小： 0 小 1大
+                Integer big = termDataArr[r * 3 + 2];
+
+                // 处理大数
+                if (big == 0) {
+                    Term term1 = list.get(c + 1);
+
+                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer termVal1 = termDataArr1[r * 3];
+                    // 单双： 0 双 1单
+                    Integer odd1 = termDataArr1[r * 3 + 1];
+                    // 大小： 0 小 1大
+                    Integer big1 = termDataArr1[r * 3 + 2];
+
+                    if (lastStage == odd1) {
+                        count++;
+                    } else {
+                        count = 1;
+                    }
+                    lastStage = odd1;
+
+                    if ((count == tipNum1 || count == tipNum2)
+                        && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
+                        needSendSMS = true;
+                    }
+                }
+            }
+        }
+    }
 
 }

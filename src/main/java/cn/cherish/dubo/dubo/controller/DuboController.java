@@ -5,6 +5,7 @@ import cn.cherish.dubo.dubo.service.DuboService;
 import cn.cherish.dubo.dubo.service.FlyService;
 import cn.cherish.dubo.dubo.util.SMSUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,9 +52,17 @@ public class DuboController {
     }
 
     @GetMapping("/sendSMS")
-    public void sendSMS(@RequestParam(required = false) String kk) {
+    public void sendSMS(
+        @RequestParam(required = false) String kk,
+        @RequestParam(required = false) String oddEven
+        ) {
         try {
-            boolean send = SMSUtils.send(SMSUtils.phones, kk + SMSUtils.randomCode());
+            boolean send = false;
+            if (StringUtils.isNotBlank(oddEven)) {
+                send = SMSUtils.send(SMSUtils.phones2, kk + "oddEven");
+            } else {
+                send = SMSUtils.send(SMSUtils.phones, kk + SMSUtils.randomCode());
+            }
             log.info("send SMS by req, result:{}", send);
         } catch (Exception e) {
             log.error("send SMS by req error", e);

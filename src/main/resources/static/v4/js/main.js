@@ -172,7 +172,7 @@ function syncData(){
 
 function sendSMS() {
     var url = "/dubo/sendSMS?kk=car";
-    var result = getAjax(url);
+    // var result = getAjax(url);
 }
 
 

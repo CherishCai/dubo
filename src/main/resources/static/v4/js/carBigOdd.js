@@ -12,6 +12,10 @@ function syncData(){
 
     if (result.success) {
         var newestNumTmp = result.data.newestNumStr;
+        if (newestNumTmp === newestNum) {
+            console.log("not need to flush");
+            return;
+        }
 
         var list = result.data.records;
         var len = list.length;
@@ -44,14 +48,14 @@ function syncData(){
                             '</div>';
 
                         $("#dataRow" + r).append(html);
-                    }else{
+                    }else {
 
-                        var term1 =list[c+1];
+                        var term1 = list[c + 1];
 
                         var termDataArr1 = term1.termDataArr;
-                        var termVal1 = termDataArr1[r*3];
-                        var odd1 = termDataArr1[r*3+1];// 单双： 0 双 1单
-                        var big1 = termDataArr1[r*3+2];// 大小： 0 小 1大
+                        var termVal1 = termDataArr1[r * 3];
+                        var odd1 = termDataArr1[r * 3 + 1];// 单双： 0 双 1单
+                        var big1 = termDataArr1[r * 3 + 2];// 大小： 0 小 1大
 
                         if (lastStage === odd1) {
                             count++;
@@ -59,11 +63,18 @@ function syncData(){
                             count = 1;
                         }
                         lastStage = odd1;
-                        var bigClass = count >= 5 ? 'big-font red' : 'big-font';
-                        var oddClass = count >= 5 ? 'big-font red' : 'big-font';
+                        var bigClass = count >= 6 ? 'big-font red' : 'big-font';
+                        var oddClass = count >= 6 ? 'big-font red' : 'big-font';
+
+                        // needPlayAudio
+                        if ((count === 6 || count === 12)
+                            && parseInt(newestNumTmp) === parseInt(curTermNum) + 1
+                        ) {
+                            needPlayAudio = true;
+                        }
 
                         var html = '<div class="datameta">' +
-                            '<p class="'+oddClass+'"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
+                            '<p class="' + oddClass + '"><b>' + (odd1 ? "单" : "双") + '</b></p>' +
                             // '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
                             '<p>' + termVal + '</p>' +
                             '<p>' + curTermNum + '</p>' +
@@ -83,9 +94,10 @@ function syncData(){
         $("#newestNum").text(newestNum);
 
     }
+
+    console.log("needPlayAudio:" + needPlayAudio);
     if (needPlayAudio) {
         playMusic();
-        sendSMS();
     }
 }
 

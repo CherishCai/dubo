@@ -25,7 +25,6 @@ public class DuboServiceTest {
 
     @Test
     public void init() throws Exception {
-        duboService.init();
 
         System.out.println("duboService = " + duboService);
     }
