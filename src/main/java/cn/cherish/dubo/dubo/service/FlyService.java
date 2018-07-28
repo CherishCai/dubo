@@ -72,6 +72,7 @@ public class FlyService extends AbstractService {
             }
 
         }
+        log.info("car needSendSMS:{}", needSendSMS);
         needSendSMS = false;
     }
 

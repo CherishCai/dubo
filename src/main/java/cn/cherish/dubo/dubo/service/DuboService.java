@@ -180,6 +180,7 @@ public class DuboService extends AbstractService {
             }
 
         }
+        log.info("car needSendSMS:{}", needSendSMS);
         needSendSMS = false;
     }
 
