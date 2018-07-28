@@ -5,12 +5,14 @@ import cn.cherish.dubo.dubo.util.DuboUtils;
 import cn.cherish.dubo.dubo.util.SMSUtils;
 import com.aliyuncs.exceptions.ClientException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -161,16 +163,15 @@ public class DuboService extends AbstractService {
     private static int tipNum1 = 6;
     private static int tipNum2 = 12;
     @Override
-    protected void afterDealHistory() {
-        List<Term> list = this.termsCachev4;
-        if (CollectionUtils.isEmpty(list)) {
+    protected void afterDealHistory(List<Term> terms) {
+        if (CollectionUtils.isEmpty(terms)) {
             return;
         }
 
-        bigOdd();
-        evenBig();
-        oddBig();
-        smallOdd();
+        bigOdd(terms);
+        evenBig(terms);
+        oddBig(terms);
+        smallOdd(terms);
 
         if (needSendSMS) {
             try {
@@ -184,12 +185,12 @@ public class DuboService extends AbstractService {
         needSendSMS = false;
     }
 
-    private void oddBig() {
-        List<Term> list = this.termsCachev4;
+    private void oddBig(List<Term> terms) {
+        List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
-        log.info("oddBig");
+        list = list.stream().sorted(Comparator.comparingLong(Term::getTermNum)).collect(Collectors.toList());
 
         int len = list.size();
         int wid = list.get(0).getTermDataArr().length;
@@ -222,10 +223,10 @@ public class DuboService extends AbstractService {
 
                     if (lastStage == big1) {
                         count++;
-                        log.info("oddBig r:{},c:{},curTermNum:{},count:{}", r, c, curTermNum, count);
                     } else {
                         count = 1;
                     }
+                    log.info("oddBig r:{},c:{},curTermNum:{},count:{}", r, c, curTermNum, count);
                     lastStage = big1;
 
                     if ((count == tipNum1 || count == tipNum2)
@@ -238,8 +239,8 @@ public class DuboService extends AbstractService {
         }
     }
 
-    private void evenBig() {
-        List<Term> list = this.termsCachev4;
+    private void evenBig(List<Term> terms) {
+        List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -278,6 +279,8 @@ public class DuboService extends AbstractService {
                     } else {
                         count = 1;
                     }
+                    log.info("evenBig r:{},c:{},curTermNum:{},count:{}", r, c, curTermNum, count);
+
                     lastStage = big1;
 
                     if ((count == tipNum1 || count == tipNum2)
@@ -289,8 +292,8 @@ public class DuboService extends AbstractService {
         }
     }
 
-    private void bigOdd() {
-        List<Term> list = this.termsCachev4;
+    private void bigOdd(List<Term> terms) {
+        List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -330,6 +333,8 @@ public class DuboService extends AbstractService {
                     } else {
                         count = 1;
                     }
+                    log.info("bigOdd r:{},c:{},curTermNum:{},count:{}", r, c, curTermNum, count);
+
                     lastStage = odd1;
 
                     if ((count == tipNum1 || count == tipNum2)
@@ -341,8 +346,8 @@ public class DuboService extends AbstractService {
         }
     }
 
-    private void smallOdd() {
-        List<Term> list = this.termsCachev4;
+    private void smallOdd(List<Term> terms) {
+        List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -382,6 +387,8 @@ public class DuboService extends AbstractService {
                     } else {
                         count = 1;
                     }
+                    log.info("smallOdd r:{},c:{},curTermNum:{},count:{}", r, c, curTermNum, count);
+
                     lastStage = odd1;
 
                     if ((count == tipNum1 || count == tipNum2)

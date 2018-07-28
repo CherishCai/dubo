@@ -53,16 +53,15 @@ public class FlyService extends AbstractService {
     private static int tipNum1 = 8;
     private static int tipNum2 = 12;
     @Override
-    protected void afterDealHistory() {
-        List<Term> list = this.termsCachev4;
-        if (CollectionUtils.isEmpty(list)) {
+    protected void afterDealHistory(List<Term> terms) {
+        if (CollectionUtils.isEmpty(terms)) {
             return;
         }
 
-        bigOdd();
-        evenBig();
-        oddBig();
-        smallOdd();
+        bigOdd(terms);
+        evenBig(terms);
+        oddBig(terms);
+        smallOdd(terms);
 
         if (needSendSMS) {
             try {
@@ -76,8 +75,8 @@ public class FlyService extends AbstractService {
         needSendSMS = false;
     }
 
-    private void oddBig() {
-        List<Term> list = this.termsCachev4;
+    private void oddBig(List<Term> terms) {
+        List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -127,8 +126,8 @@ public class FlyService extends AbstractService {
         }
     }
 
-    private void evenBig() {
-        List<Term> list = this.termsCachev4;
+    private void evenBig(List<Term> terms) {
+        List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -178,8 +177,8 @@ public class FlyService extends AbstractService {
         }
     }
 
-    private void bigOdd() {
-        List<Term> list = this.termsCachev4;
+    private void bigOdd(List<Term> terms) {
+        List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
@@ -230,8 +229,8 @@ public class FlyService extends AbstractService {
         }
     }
 
-    private void smallOdd() {
-        List<Term> list = this.termsCachev4;
+    private void smallOdd(List<Term> terms) {
+        List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
         }

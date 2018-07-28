@@ -147,10 +147,14 @@ public abstract class AbstractService {
         v1data(history.getRows().stream().map(this::newTerm).collect(Collectors.toList()));
         v4data(history.getRows().stream().map(this::newTerm).collect(Collectors.toList()));
 
-        afterDealHistory();
+        afterDealHistory(
+            history.getRows().stream().map(this::newTerm)
+            .sorted(Comparator.comparingLong(Term::getTermNum))
+                .collect(Collectors.toList())
+        );
     }
 
-    protected abstract void afterDealHistory();
+    protected abstract void afterDealHistory(List<Term> terms);
 
     private void v4data(List<Term> terms) {
 
