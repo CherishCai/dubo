@@ -188,6 +188,7 @@ public class DuboService extends AbstractService {
         if (CollectionUtils.isEmpty(list)) {
             return;
         }
+        log.info("oddBig");
 
         int len = list.size();
         int wid = list.get(0).getTermDataArr().length;
@@ -211,7 +212,7 @@ public class DuboService extends AbstractService {
                 if (odd > 0) {
                     Term term1 = list.get(c + 1);
 
-                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer[] termDataArr1 = term1.getTermDataArr();
                     Integer termVal1 = termDataArr1[r * 3];
                     // 单双： 0 双 1单
                     Integer odd1 = termDataArr1[r * 3 + 1];
@@ -220,6 +221,7 @@ public class DuboService extends AbstractService {
 
                     if (lastStage == big1) {
                         count++;
+                        log.info("oddBig r:{},c:{},curTermNum:{},count:{}", r, c, curTermNum, count);
                     } else {
                         count = 1;
                     }
@@ -228,6 +230,7 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
+                        log.info("oddBig needSendSMS");
                     }
                 }
             }
@@ -262,7 +265,7 @@ public class DuboService extends AbstractService {
                 if (odd == 0) {
                     Term term1 = list.get(c + 1);
 
-                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer[] termDataArr1 = term1.getTermDataArr();
                     Integer termVal1 = termDataArr1[r * 3];
                     // 单双： 0 双 1单
                     Integer odd1 = termDataArr1[r * 3 + 1];
@@ -314,7 +317,7 @@ public class DuboService extends AbstractService {
                 if (big > 0) {
                     Term term1 = list.get(c + 1);
 
-                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer[] termDataArr1 = term1.getTermDataArr();
                     Integer termVal1 = termDataArr1[r * 3];
                     // 单双： 0 双 1单
                     Integer odd1 = termDataArr1[r * 3 + 1];
@@ -366,7 +369,7 @@ public class DuboService extends AbstractService {
                 if (big == 0) {
                     Term term1 = list.get(c + 1);
 
-                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer[] termDataArr1 = term1.getTermDataArr();
                     Integer termVal1 = termDataArr1[r * 3];
                     // 单双： 0 双 1单
                     Integer odd1 = termDataArr1[r * 3 + 1];

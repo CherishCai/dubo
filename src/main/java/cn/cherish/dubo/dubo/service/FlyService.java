@@ -103,7 +103,7 @@ public class FlyService extends AbstractService {
                 if (odd > 0) {
                     Term term1 = list.get(c + 1);
 
-                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer[] termDataArr1 = term1.getTermDataArr();
                     Integer termVal1 = termDataArr1[r * 3];
                     // 单双： 0 双 1单
                     Integer odd1 = termDataArr1[r * 3 + 1];
@@ -154,7 +154,7 @@ public class FlyService extends AbstractService {
                 if (odd == 0) {
                     Term term1 = list.get(c + 1);
 
-                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer[] termDataArr1 = term1.getTermDataArr();
                     Integer termVal1 = termDataArr1[r * 3];
                     // 单双： 0 双 1单
                     Integer odd1 = termDataArr1[r * 3 + 1];
@@ -206,7 +206,7 @@ public class FlyService extends AbstractService {
                 if (big > 0) {
                     Term term1 = list.get(c + 1);
 
-                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer[] termDataArr1 = term1.getTermDataArr();
                     Integer termVal1 = termDataArr1[r * 3];
                     // 单双： 0 双 1单
                     Integer odd1 = termDataArr1[r * 3 + 1];
@@ -258,7 +258,7 @@ public class FlyService extends AbstractService {
                 if (big == 0) {
                     Term term1 = list.get(c + 1);
 
-                    Integer[] termDataArr1 = term.getTermDataArr();
+                    Integer[] termDataArr1 = term1.getTermDataArr();
                     Integer termVal1 = termDataArr1[r * 3];
                     // 单双： 0 双 1单
                     Integer odd1 = termDataArr1[r * 3 + 1];
