@@ -65,7 +65,7 @@ public class FlyService extends AbstractService {
 
         if (needSendSMS) {
             try {
-                SMSUtils.send(SMSUtils.phones2, "F612");
+                SMSUtils.send(SMSUtils.phones2, "F"+ SMSUtils.randomCode());
             } catch (ClientException e) {
                 log.error("send sms error", e);
             }
