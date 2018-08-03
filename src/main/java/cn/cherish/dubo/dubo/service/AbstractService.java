@@ -119,7 +119,12 @@ public abstract class AbstractService {
         String[] split = termStr.split(SPILT);
         Integer[] ints = IntUtils.strToInts(split);
 
+        Integer[] termDataArr12 = new Integer[1];
+        termDataArr12[0] = ints[0] + ints[1];
+
         newTerm.setTermDataArr(ints);
+        newTerm.setTermData12(ints[0] + ints[1]);
+        newTerm.setTermDataArr12(termDataArr12);
         newTerm.setTermData(termStr);
         return newTerm;
     }
@@ -168,6 +173,16 @@ public abstract class AbstractService {
                 newArr[i * 3 + 2] = termDataArr[i] <= 5 ? 0 : 1;
             }
             term.setTermDataArr(newArr);
+
+            Integer[] termDataArr12 = term.getTermDataArr12();
+            int len2 = termDataArr12.length;
+            Integer[] newArr2 = new Integer[len * 3];
+            for (int i = 0; i < len2; i++) {
+                newArr2[i * 3] = termDataArr12[i];
+                newArr2[i * 3 + 1] = termDataArr12[i] % 2 == 0 ? 0 : 1;
+                newArr2[i * 3 + 2] = termDataArr12[i] <= 11 ? 0 : 1;
+            }
+            term.setTermDataArr12(newArr2);
 
         }).collect(Collectors.toList());
     }

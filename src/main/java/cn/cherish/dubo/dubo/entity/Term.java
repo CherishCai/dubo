@@ -35,7 +35,11 @@ public class Term implements Serializable {
 //    @TableField("termData")
     private String termData;
 
+    private Integer termData12;
+
     private Integer[] termDataArr;
+
+    private Integer[] termDataArr12;
 
 //    @TableField("betEndTime")
     private String betEndTime;

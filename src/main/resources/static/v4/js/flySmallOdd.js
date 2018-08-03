@@ -28,6 +28,12 @@ function syncData(){
 
             var count = 0;
             var lastStage = 0;
+
+            var count12 = 0;
+            var lastStage12 = 0;
+            if (r === 0) {
+                $("#dataRow12").empty();
+            }
             for (var c=0; c < len; c++) {
 
                 var term = list[c];
@@ -37,6 +43,11 @@ function syncData(){
                 var termVal = termDataArr[r*3];
                 var odd = termDataArr[r*3+1];// 单双： 0 双 1单
                 var big = termDataArr[r*3+2];// 大小： 0 小 1大
+
+                var termDataArr12 = term.termDataArr12;
+                var termVal12 = termDataArr12[0];
+                var odd12 = termDataArr12[1];// 单双： 0 双 1单
+                var big12 = termDataArr12[2];// 大小： 0 小 1大
 
                 // 处理单数
                 if (!big){
@@ -82,6 +93,44 @@ function syncData(){
 
                         $("#dataRow"+r).append(html)
                     }//end else
+                }
+
+                if (!big12 && r === 0) {
+                    if (c + 1 === len) {
+                        var html12 = '<div class="datameta">' +
+                            '<p><b>null</b></p>' +
+                            '<p>' + termVal + '</p>' +
+                            '<p>' + curTermNum + '</p>' +
+                            '</div>';
+                        $("#dataRow12").append(html12);
+                    } else {
+
+                        var term1 =list[c+1];
+
+                        var termDataArr112 = term1.termDataArr12;
+                        var termVal112 = termDataArr112[0];
+                        var odd112 = termDataArr112[1];// 单双： 0 双 1单
+                        var big112 = termDataArr112[2];// 大小： 0 小 1大
+
+                        if (lastStage12 === odd112) {
+                            count12++;
+                        } else {
+                            count12 = 1;
+                        }
+                        lastStage12 = odd112;
+
+                        var bigClass12 = count12 >= 7 ? 'big-font red' : 'big-font';
+                        var oddClass12 = count12 >= 7 ? 'big-font red' : 'big-font';
+
+                        var html12 = '<div class="datameta">' +
+                            '<p class="' + oddClass12 + '"><b>' + (odd112 ? "单" : "双") + '</b></p>' +
+                            // '<p class="'+bigClass+'"><b>' + (big ? "大" : "小") + '</b></p>' +
+                            '<p>' + termVal12 + '</p>' +
+                            '<p>' + curTermNum + '</p>' +
+                            '</div>';
+
+                        $("#dataRow12").append(html12);
+                    }
                 }
 
             }

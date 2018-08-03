@@ -162,6 +162,7 @@ public class DuboService extends AbstractService {
     private static boolean needSendSMS = false;
     private static int tipNum1 = 6;
     private static int tipNum2 = 12;
+
     @Override
     protected void afterDealHistory(List<Term> terms) {
         if (CollectionUtils.isEmpty(terms)) {
