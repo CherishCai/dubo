@@ -144,8 +144,10 @@ function syncData(){
             }
             var tmp = "<b class='big-font'>" + (r+1) + "列艇</br><hr/>";
             $("#dataRow"+r).append(tmp);
-            var tmp12 = "<b class='big-font'>一二列和</br><hr/>";
-            $("#dataRow12").append(tmp12);
+            if (r === 0) {
+                var tmp12 = "<b class='big-font'>一二列和</br><hr/>";
+                $("#dataRow12").append(tmp12);
+            }
 
         } //end for
 
