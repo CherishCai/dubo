@@ -120,8 +120,8 @@ function syncData(){
                             }
                             lastStage12 = odd112;
 
-                            var bigClass12 = count12 >= 7 ? 'big-font red' : 'big-font';
-                            var oddClass12 = count12 >= 7 ? 'big-font red' : 'big-font';
+                            var bigClass12 = count12 >= SEQUENTIAL ? 'big-font red' : 'big-font';
+                            var oddClass12 = count12 >= SEQUENTIAL ? 'big-font red' : 'big-font';
 
                             // needPlayAudio
                             if ((count === SEQUENTIAL || count === 12)
