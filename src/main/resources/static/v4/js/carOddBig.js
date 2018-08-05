@@ -2,6 +2,7 @@
 
 
 var newestNum = null;
+const SEQUENTIAL = 10;
 
 function syncData(){
     var dataKK = $("#dataKK").val();
@@ -75,11 +76,11 @@ function syncData(){
                             count = 1;
                         }
                         lastStage = big1;
-                        var bigClass = count >= 5 ? 'big-font red' : 'big-font';
-                        var oddClass = count >= 5 ? 'big-font red' : 'big-font';
+                        var bigClass = count >= SEQUENTIAL ? 'big-font red' : 'big-font';
+                        var oddClass = count >= SEQUENTIAL ? 'big-font red' : 'big-font';
 
                         // needPlayAudio
-                        if ((count === 6 || count === 12)
+                        if ((count === SEQUENTIAL || count === 12)
                             && parseInt(newestNumTmp) === parseInt(curTermNum) + 1
                         ) {
                             needPlayAudio = true;
@@ -113,15 +114,22 @@ function syncData(){
                         var odd112 = termDataArr112[1];// 单双： 0 双 1单
                         var big112 = termDataArr112[2];// 大小： 0 小 1大
 
-                        if (lastStage12 === odd112) {
+                        if (lastStage12 === big112) {
                             count12++;
                         } else {
                             count12 = 1;
                         }
-                        lastStage12 = odd112;
+                        lastStage12 = big112;
 
-                        var bigClass12 = count12 >= 7 ? 'big-font red' : 'big-font';
-                        var oddClass12 = count12 >= 7 ? 'big-font red' : 'big-font';
+                        var bigClass12 = count12 >= SEQUENTIAL ? 'big-font red' : 'big-font';
+                        var oddClass12 = count12 >= SEQUENTIAL ? 'big-font red' : 'big-font';
+
+                        // needPlayAudio
+                        if ((count === SEQUENTIAL || count === 12)
+                            && parseInt(newestNumTmp) === parseInt(curTermNum) + 1
+                        ) {
+                            needPlayAudio = true;
+                        }
 
                         var html12 = '<div class="datameta">' +
                             // '<p class="' + oddClass12 + '"><b>' + (odd112 ? "单" : "双") + '</b></p>' +
@@ -137,6 +145,8 @@ function syncData(){
             }
             var tmp = "<b class='big-font'>" + (r+1) + "列车</br><hr/>";
             $("#dataRow"+r).append(tmp);
+            var tmp12 = "<b class='big-font'>一二列和</br><hr/>";
+            $("#dataRow12").append(tmp12);
 
         } //end for
 

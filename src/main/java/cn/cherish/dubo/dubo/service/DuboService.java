@@ -160,7 +160,7 @@ public class DuboService extends AbstractService {
     }
 
     private static boolean needSendSMS = false;
-    private static int tipNum1 = 6;
+    private static int tipNum1 = 10;
     private static int tipNum2 = 12;
 
     @Override

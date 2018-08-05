@@ -50,7 +50,7 @@ public class FlyService extends AbstractService {
     }
 
     private static boolean needSendSMS = false;
-    private static int tipNum1 = 8;
+    private static int tipNum1 = 10;
     private static int tipNum2 = 12;
     @Override
     protected void afterDealHistory(List<Term> terms) {

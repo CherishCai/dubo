@@ -2,6 +2,7 @@
 
 
 var newestNum = null;
+const SEQUENTIAL = 10;
 
 function syncData(){
     var dataKK = $("#dataKK").val();
@@ -74,11 +75,11 @@ function syncData(){
                             count = 1;
                         }
                         lastStage = odd1;
-                        var bigClass = count >= 5 ? 'big-font red' : 'big-font';
-                        var oddClass = count >= 5 ? 'big-font red' : 'big-font';
+                        var bigClass = count >= SEQUENTIAL ? 'big-font red' : 'big-font';
+                        var oddClass = count >= SEQUENTIAL ? 'big-font red' : 'big-font';
 
                         // needPlayAudio
-                        if ((count === 8 || count === 12)
+                        if ((count === SEQUENTIAL || count === 12)
                             && parseInt(newestNumTmp) === parseInt(curTermNum) + 1
                         ) {
                             needPlayAudio = true;
@@ -119,8 +120,15 @@ function syncData(){
                         }
                         lastStage12 = odd112;
 
-                        var bigClass12 = count12 >= 7 ? 'big-font red' : 'big-font';
-                        var oddClass12 = count12 >= 7 ? 'big-font red' : 'big-font';
+                        var bigClass12 = count12 >= SEQUENTIAL ? 'big-font red' : 'big-font';
+                        var oddClass12 = count12 >= SEQUENTIAL ? 'big-font red' : 'big-font';
+
+                        // needPlayAudio
+                        if ((count === SEQUENTIAL || count === 12)
+                            && parseInt(newestNumTmp) === parseInt(curTermNum) + 1
+                        ) {
+                            needPlayAudio = true;
+                        }
 
                         var html12 = '<div class="datameta">' +
                             '<p class="' + oddClass12 + '"><b>' + (odd112 ? "单" : "双") + '</b></p>' +
@@ -136,6 +144,8 @@ function syncData(){
             }
             var tmp = "<b class='big-font'>" + (r+1) + "列艇</br><hr/>";
             $("#dataRow"+r).append(tmp);
+            var tmp12 = "<b class='big-font'>一二列和</br><hr/>";
+            $("#dataRow12").append(tmp12);
 
         } //end for
 
