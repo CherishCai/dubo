@@ -177,8 +177,13 @@ public class DuboService extends AbstractService {
         if (needSendSMS) {
             try {
                 SMSUtils.send(SMSUtils.phones2, "C" + SMSUtils.randomCode());
-            } catch (ClientException e) {
+            } catch (Exception e) {
                 log.error("send sms error", e);
+                try {
+                    SMSUtils.send(SMSUtils.phones2, "C" + SMSUtils.randomCode());
+                } catch (ClientException e1) {
+                    log.error("send sms error2", e);
+                }
             }
 
         }
