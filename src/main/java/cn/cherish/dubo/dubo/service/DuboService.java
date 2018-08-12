@@ -190,7 +190,10 @@ public class DuboService extends AbstractService {
             }
 
             try {
-                MailUtils.singleMail(MailUtils.targets, mailSubject, mailContent);
+                boolean mail = MailUtils.htmlMail(MailUtils.targets, mailSubject, mailContent);
+                if (!mail) {
+                    log.warn("send mail fail");
+                }
             } catch (Exception e) {
                 log.error("send mail error", e);
             }
@@ -247,7 +250,8 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        mailContent = "赛车单大小";
+                        String url = PRE_URL + "/car/v4OddBig.html";
+                        mailContent = "<a style='font-size:36px' href='" + url + "'>赛车单大小</a>";
                     }
                 }
             }
@@ -301,7 +305,8 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        mailContent = "赛车双大小";
+                        String url = PRE_URL + "/car/evenBig.html";
+                        mailContent = "<a style='font-size:36px' href='" + url + "'>赛车双大小</a>";
                     }
                 }
             }
@@ -356,7 +361,8 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        mailContent = "赛车大单双";
+                        String url = PRE_URL + "/car/bigOdd.html";
+                        mailContent = "<a style='font-size:36px' href='" + url + "'>赛车大单双</a>";
                     }
                 }
             }
@@ -411,7 +417,8 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        mailContent = "赛车小单双";
+                        String url = PRE_URL + "/car/smallOdd.html";
+                        mailContent = "<a style='font-size:36px' href='" + url + "'>赛车小单双</a>";
                     }
                 }
             }

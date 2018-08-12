@@ -36,6 +36,8 @@ import org.springframework.util.CollectionUtils;
 @Slf4j
 public abstract class AbstractService {
 
+    public volatile String HOST = "http://47.75.78.66:8080";
+    public volatile String PRE_URL = HOST + "/v4";
     public volatile String type = "car";
     public volatile String SPILT = ",";
     public volatile String newestNumStr = "";

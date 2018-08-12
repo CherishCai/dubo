@@ -80,7 +80,10 @@ public class FlyService extends AbstractService {
             }
 
             try {
-                MailUtils.singleMail(MailUtils.targets, mailSubject, mailContent);
+                boolean mail = MailUtils.htmlMail(MailUtils.targets, mailSubject, mailContent);
+                if (!mail) {
+                    log.warn("send mail fail");
+                }
             } catch (Exception e) {
                 log.error("send mail error", e);
             }
@@ -135,7 +138,8 @@ public class FlyService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        mailContent = "飞艇单大小";
+                        String url = PRE_URL + "/fly/v4OddBig.html";
+                        mailContent = "<a style='font-size:36px' href='" + url + "'>飞艇单大小</a>";
                     }
                 }
             }
@@ -187,7 +191,8 @@ public class FlyService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        mailContent = "飞艇双大小";
+                        String url = PRE_URL + "/fly/evenBig.html";
+                        mailContent = "<a style='font-size:36px' href='" + url + "'>飞艇双大小</a>";
                     }
                 }
             }
@@ -240,7 +245,8 @@ public class FlyService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        mailContent = "飞艇大单双";
+                        String url = PRE_URL + "/fly/bigOdd.html";
+                        mailContent = "<a style='font-size:36px' href='" + url + "'>飞艇大单双</a>";
                     }
                 }
             }
@@ -293,7 +299,8 @@ public class FlyService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        mailContent = "飞艇小单双";
+                        String url = PRE_URL + "/fly/smallOdd.html";
+                        mailContent = "<a style='font-size:36px' href='" + url + "'>飞艇小单双</a>";
                     }
                 }
             }
