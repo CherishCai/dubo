@@ -2,6 +2,7 @@ package cn.cherish.dubo.dubo.service;
 
 import cn.cherish.dubo.dubo.entity.Term;
 import cn.cherish.dubo.dubo.util.DuboUtils;
+import cn.cherish.dubo.dubo.util.MailUtils;
 import cn.cherish.dubo.dubo.util.SMSUtils;
 import com.aliyuncs.exceptions.ClientException;
 import java.util.Collections;
@@ -163,6 +164,8 @@ public class DuboService extends AbstractService {
     private static int tipNum1 = 10;
     private static int tipNum2 = 12;
 
+    private static String mailSubject = "赛车";
+    private static String mailContent = "";
     @Override
     protected void afterDealHistory(List<Term> terms) {
         if (CollectionUtils.isEmpty(terms)) {
@@ -184,6 +187,12 @@ public class DuboService extends AbstractService {
                 } catch (ClientException e1) {
                     log.error("send sms error2", e);
                 }
+            }
+
+            try {
+                MailUtils.singleMail(MailUtils.targets, mailSubject, mailContent);
+            } catch (Exception e) {
+                log.error("send mail error", e);
             }
 
         }
@@ -238,7 +247,7 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
-                        log.info("oddBig needSendSMS");
+                        mailContent = "赛车单大小";
                     }
                 }
             }
@@ -292,6 +301,7 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
+                        mailContent = "赛车双大小";
                     }
                 }
             }
@@ -346,6 +356,7 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
+                        mailContent = "赛车大单双";
                     }
                 }
             }
@@ -400,6 +411,7 @@ public class DuboService extends AbstractService {
                     if ((count == tipNum1 || count == tipNum2)
                         && newestNumStr.endsWith(String.valueOf(curTermNum + 1))) {
                         needSendSMS = true;
+                        mailContent = "赛车小单双";
                     }
                 }
             }
