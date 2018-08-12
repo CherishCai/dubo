@@ -1,6 +1,5 @@
 package cn.cherish.dubo.dubo.util;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
@@ -87,7 +86,6 @@ public class MailUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        new ByteInputStream();
         String html = "<html><head>"+
             "</head><body>"+
             "<audio src='http://m10.music.126.net/20160422225433/25b43b999bcdaf3425b9194514340596/ymusic/8c94/b9af/69e3/7ebe35b8e00154120822550b21b0c9c5.mp3' autoplay='autoplay' controls='controls' loop='-1'>爱你</audio>"+
@@ -101,8 +99,6 @@ public class MailUtils {
         if (result) {
             System.out.println("发送邮件成功。。。。");
         }
-
-
 
     }
 
