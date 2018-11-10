@@ -170,7 +170,7 @@ public class FlyService extends AbstractService {
                     + "列号：" + c + "<br>"
                     + "</p>";
 
-                sendSMS("X"+ SMSUtils.randomCode());
+                sendSMS("X" + c + SMSUtils.randomCode());
                 sendMail(content);
             }
         }
@@ -246,7 +246,7 @@ public class FlyService extends AbstractService {
                     + "列号：" + c + "<br>"
                     + "</p>";
 
-                sendSMS("X"+ SMSUtils.randomCode());
+                sendSMS("X" + c + SMSUtils.randomCode());
                 sendMail(content);
             }
         }
