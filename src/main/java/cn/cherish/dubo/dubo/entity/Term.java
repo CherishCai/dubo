@@ -37,8 +37,16 @@ public class Term implements Serializable {
 
     private Integer termData12;
 
+    /**
+     * 0 源
+     * +1 奇偶 0偶1奇
+     * +2 大小 0小1大
+     */
     private Integer[] termDataArr;
 
+    /**
+     * 一二列之和
+     */
     private Integer[] termDataArr12;
 
 //    @TableField("betEndTime")

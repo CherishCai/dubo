@@ -121,6 +121,7 @@ public abstract class AbstractService {
         String[] split = termStr.split(SPILT);
         Integer[] ints = IntUtils.strToInts(split);
 
+        // 一二列之和
         Integer[] termDataArr12 = new Integer[1];
         termDataArr12[0] = ints[0] + ints[1];
 
