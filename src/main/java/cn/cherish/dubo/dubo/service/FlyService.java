@@ -6,6 +6,7 @@ import cn.cherish.dubo.dubo.util.MailUtils;
 import cn.cherish.dubo.dubo.util.SMSUtils;
 import com.aliyuncs.exceptions.ClientException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
@@ -73,7 +74,7 @@ public class FlyService extends AbstractService {
         oddBig(terms);
         smallOdd(terms);
 
-        if (needSendSMS) {
+        /*if (needSendSMS) {
             try {
                 SMSUtils.send(SMSUtils.phones2, "F"+ SMSUtils.randomCode());
             } catch (Exception e) {
@@ -94,7 +95,7 @@ public class FlyService extends AbstractService {
                 log.error("send mail error", e);
             }
 
-        }
+        }*/
         log.info("car needSendSMS:{}", needSendSMS);
         needSendSMS = false;
     }
@@ -168,10 +169,17 @@ public class FlyService extends AbstractService {
                     + "<b style='color:red'>种类：单双</b><br>"
                     + "期号：" + termNum + "<br>"
                     + "列号：" + c + "<br>"
+                    + "时间：" + new Date() + "<br>"
                     + "</p>";
 
-                sendSMS("X" + c + SMSUtils.randomCode());
-                sendMail(content);
+                SmsAndMailTask newTask = SmsAndMailTask.builder()
+                    .phoneNums(SMSUtils.phones2)
+                    .smsCode("X" + c + SMSUtils.randomCode())
+                    .mailTargets(MailUtils.targets)
+                    .mailSubject(mailSubject)
+                    .mailContent(content)
+                    .build();
+                taskQueue.add(newTask);
             }
         }
     }
@@ -244,42 +252,21 @@ public class FlyService extends AbstractService {
                     + "<b style='color:red'>种类：大小</b><br>"
                     + "期号：" + termNum + "<br>"
                     + "列号：" + c + "<br>"
+                    + "时间：" + new Date() + "<br>"
                     + "</p>";
 
-                sendSMS("X" + c + SMSUtils.randomCode());
-                sendMail(content);
+                SmsAndMailTask newTask = SmsAndMailTask.builder()
+                    .phoneNums(SMSUtils.phones2)
+                    .smsCode("X" + c + SMSUtils.randomCode())
+                    .mailTargets(MailUtils.targets)
+                    .mailSubject(mailSubject)
+                    .mailContent(content)
+                    .build();
+                taskQueue.add(newTask);
             }
         }
     }
 
-    private void sendMail(String content) {
-        try {
-            boolean mail = MailUtils.htmlMail(MailUtils.targets, mailSubject, content);
-            if (!mail) {
-                log.warn("send mail fail X");
-            }
-        } catch (Exception e) {
-            log.error("send mail error X", e);
-            try {
-                MailUtils.htmlMail(MailUtils.targets, mailSubject, content);
-            } catch (Exception e1) {
-                log.error("send mail error2 x", e);
-            }
-        }
-    }
-
-    private void sendSMS(String code) {
-        try {
-            SMSUtils.send(SMSUtils.phones2, code);
-        } catch (Exception e) {
-            log.error("send sms error X", e);
-            try {
-                SMSUtils.send(SMSUtils.phones2, code);
-            } catch (Exception e1) {
-                log.error("send sms error2 x", e);
-            }
-        }
-    }
 
     private void printArr(int len, boolean[][] evenOddBool) {
         for (int k = 0; k < EVEN_ODD_TICK_NUM; k++) {

@@ -9,11 +9,13 @@ import cn.cherish.dubo.dubo.util.DuboRuleUtils;
 import cn.cherish.dubo.dubo.util.DuboUtils;
 import cn.cherish.dubo.dubo.util.DuboUtils.History;
 import cn.cherish.dubo.dubo.util.IntUtils;
+import cn.cherish.dubo.dubo.util.MailUtils;
 import cn.cherish.dubo.dubo.util.SMSUtils;
 import cn.cherish.dubo.dubo.util.rule.DuboRule;
 import com.google.common.base.Joiner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,10 +25,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
+import lombok.Builder;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -50,6 +58,8 @@ public abstract class AbstractService {
     public volatile Map<String, List<Combination>> todaySub15Map = new HashMap<>();
     public volatile List<Term> termsCache = Collections.emptyList();
     public volatile List<Term> termsCachev4 = Collections.emptyList();
+
+    protected static final Queue<SmsAndMailTask> taskQueue = new ConcurrentLinkedQueue<>();
 
     public TermCacheResp getTermsCache(){
         List<Term> list = termsCachev4;
@@ -342,6 +352,48 @@ public abstract class AbstractService {
             return true;
         }
         return false;
+    }
+
+    @Scheduled(fixedDelay = 2 * 1000, initialDelay = 10 * 1000)
+    public void dealTask() {
+        log.info("dealData dealTask 2 sec");
+        List<SmsAndMailTask> failureList = new ArrayList<>();
+        while (!taskQueue.isEmpty()) {
+            SmsAndMailTask task = taskQueue.poll();
+            boolean sendSMS;
+            try {
+                sendSMS = SMSUtils.send(task.phoneNums, task.smsCode);
+            } catch (Exception e) {
+                log.error("SMSUtils.send error, ", e);
+                sendSMS = false;
+            }
+
+            boolean htmlMail;
+            try {
+                htmlMail = MailUtils.htmlMail(task.mailTargets, task.mailSubject, task.mailContent);
+            } catch (Exception e) {
+                log.error("SMSUtils.send error, ", e);
+                htmlMail = false;
+            }
+
+            // 添加到重试
+            if (!sendSMS || !htmlMail) {
+                failureList.add(task);
+            }
+        }
+
+        taskQueue.addAll(failureList);
+    }
+
+    @Data
+    @Builder
+    static class SmsAndMailTask {
+
+        String[] mailTargets;
+        String mailSubject;
+        String mailContent;
+        String smsCode;
+        Set<String> phoneNums;
     }
 
 }
