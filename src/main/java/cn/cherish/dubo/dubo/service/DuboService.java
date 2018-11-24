@@ -281,14 +281,18 @@ public class DuboService extends AbstractService {
                     + "时间：" + new Date() + "<br>"
                     + "</p>";
 
-                SmsAndMailTask newTask = SmsAndMailTask.builder()
+                SmsTask smsTask = SmsTask.builder()
                     .phoneNums(SMSUtils.phones2)
                     .smsCode("X" + c + SMSUtils.randomCode())
+                    .build();
+                smsTaskQueue.add(smsTask);
+
+                MailTask mailTask = MailTask.builder()
                     .mailTargets(MailUtils.targets)
                     .mailSubject(mailSubject)
                     .mailContent(content)
                     .build();
-                taskQueue.add(newTask);
+                mailTaskQueue.add(mailTask);
             }
         }
     }
@@ -364,14 +368,18 @@ public class DuboService extends AbstractService {
                     + "时间：" + new Date() + "<br>"
                     + "</p>";
 
-                SmsAndMailTask newTask = SmsAndMailTask.builder()
+                SmsTask smsTask = SmsTask.builder()
                     .phoneNums(SMSUtils.phones2)
                     .smsCode("X" + c + SMSUtils.randomCode())
+                    .build();
+                smsTaskQueue.add(smsTask);
+
+                MailTask mailTask = MailTask.builder()
                     .mailTargets(MailUtils.targets)
                     .mailSubject(mailSubject)
                     .mailContent(content)
                     .build();
-                taskQueue.add(newTask);
+                mailTaskQueue.add(mailTask);
             }
         }
     }

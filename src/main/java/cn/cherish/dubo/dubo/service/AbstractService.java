@@ -59,7 +59,8 @@ public abstract class AbstractService {
     public volatile List<Term> termsCache = Collections.emptyList();
     public volatile List<Term> termsCachev4 = Collections.emptyList();
 
-    protected static final Queue<SmsAndMailTask> taskQueue = new ConcurrentLinkedQueue<>();
+    protected static final Queue<SmsTask> smsTaskQueue = new ConcurrentLinkedQueue<>();
+    protected static final Queue<MailTask> mailTaskQueue = new ConcurrentLinkedQueue<>();
 
     public TermCacheResp getTermsCache(){
         List<Term> list = termsCachev4;
@@ -355,12 +356,12 @@ public abstract class AbstractService {
     }
 
     @Scheduled(fixedDelay = 2 * 1000, initialDelay = 10 * 1000)
-    public void dealTask() {
-        log.info("dealData dealTask 2 sec");
-        List<SmsAndMailTask> failureList = new ArrayList<>();
-        while (!taskQueue.isEmpty()) {
-            SmsAndMailTask task = taskQueue.poll();
-            boolean sendSMS;
+    public void dealSMSTask() {
+        log.info("dealSMSTask 2 sec, smsTaskQueue size:{}", smsTaskQueue.size());
+        List<SmsTask> failureList = new ArrayList<>();
+        while (!smsTaskQueue.isEmpty()) {
+            SmsTask task = smsTaskQueue.poll();
+            boolean sendSMS = true;
             try {
                 sendSMS = SMSUtils.send(task.phoneNums, task.smsCode);
             } catch (Exception e) {
@@ -368,32 +369,53 @@ public abstract class AbstractService {
                 sendSMS = false;
             }
 
-            boolean htmlMail;
-            try {
-                htmlMail = MailUtils.htmlMail(task.mailTargets, task.mailSubject, task.mailContent);
-            } catch (Exception e) {
-                log.error("SMSUtils.send error, ", e);
-                htmlMail = false;
-            }
-
             // 添加到重试
-            if (!sendSMS || !htmlMail) {
+            if (!sendSMS) {
                 failureList.add(task);
             }
         }
 
-        taskQueue.addAll(failureList);
+        smsTaskQueue.addAll(failureList);
+    }
+
+    @Scheduled(fixedDelay = 2 * 1000, initialDelay = 10 * 1000)
+    public void dealMailTask() {
+        log.info("dealMailTask 2 sec, mailTaskQueue size:{}", mailTaskQueue.size());
+        List<MailTask> failureList = new ArrayList<>();
+        while (!mailTaskQueue.isEmpty()) {
+            MailTask task = mailTaskQueue.poll();
+            boolean sendMail = true;
+            try {
+                sendMail = MailUtils.htmlMail(task.mailTargets, task.mailSubject, task.mailContent);
+            } catch (Exception e) {
+                log.error("SMSUtils.send error, ", e);
+                sendMail = false;
+            }
+
+            // 添加到重试
+            if (!sendMail) {
+                failureList.add(task);
+            }
+        }
+
+        mailTaskQueue.addAll(failureList);
     }
 
     @Data
     @Builder
-    static class SmsAndMailTask {
+    static class SmsTask {
+
+        String smsCode;
+        Set<String> phoneNums;
+    }
+
+    @Data
+    @Builder
+    static class MailTask {
 
         String[] mailTargets;
         String mailSubject;
         String mailContent;
-        String smsCode;
-        Set<String> phoneNums;
     }
 
 }
