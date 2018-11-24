@@ -369,9 +369,10 @@ public abstract class AbstractService {
                 sendSMS = false;
             }
 
+            log.info("dealSMSTask,sendSMS:{}", sendSMS);
             // 添加到重试
             if (!sendSMS) {
-                failureList.add(task);
+//                failureList.add(task);
             }
         }
 
@@ -392,6 +393,7 @@ public abstract class AbstractService {
                 sendMail = false;
             }
 
+            log.info("dealMailTask,sendMail:{}", sendMail);
             // 添加到重试
             if (!sendMail) {
                 failureList.add(task);
