@@ -388,7 +388,7 @@ public abstract class AbstractService {
             try {
                 sendMail = MailUtils.htmlMail(task.mailTargets, task.mailSubject, task.mailContent);
             } catch (Exception e) {
-                log.error("SMSUtils.send error, ", e);
+                log.error("MailUtils.send error, ", e);
                 sendMail = false;
             }
 
