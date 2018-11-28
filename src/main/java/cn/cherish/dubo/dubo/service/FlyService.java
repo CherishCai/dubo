@@ -100,7 +100,7 @@ public class FlyService extends AbstractService {
         needSendSMS = false;
     }
 
-    private static final int EVEN_ODD_TICK_NUM = 5;
+    private static final int EVEN_ODD_TICK_NUM = 7;
     /**
      * 单双 ❌ 五次
      */

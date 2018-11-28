@@ -382,7 +382,7 @@ public abstract class AbstractService {
     @Scheduled(fixedDelay = 2 * 1000, initialDelay = 10 * 1000)
     public void dealMailTask() {
         log.info("dealMailTask 2 sec, mailTaskQueue size:{}", mailTaskQueue.size());
-        List<MailTask> failureList = new ArrayList<>();
+//        List<MailTask> failureList = new ArrayList<>();
         while (!mailTaskQueue.isEmpty()) {
             MailTask task = mailTaskQueue.poll();
             boolean sendMail = true;
@@ -396,11 +396,11 @@ public abstract class AbstractService {
             log.info("dealMailTask,sendMail:{}", sendMail);
             // 添加到重试
             if (!sendMail) {
-                failureList.add(task);
+//                failureList.add(task);
             }
         }
 
-        mailTaskQueue.addAll(failureList);
+//        mailTaskQueue.addAll(failureList);
     }
 
     @Data
