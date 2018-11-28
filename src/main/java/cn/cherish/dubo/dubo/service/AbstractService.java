@@ -5,6 +5,7 @@ import cn.cherish.dubo.dubo.dto.resp.DuboMsgResp;
 import cn.cherish.dubo.dubo.dto.resp.TermCacheResp;
 import cn.cherish.dubo.dubo.entity.Combination;
 import cn.cherish.dubo.dubo.entity.Term;
+import cn.cherish.dubo.dubo.util.AlertOverUtils;
 import cn.cherish.dubo.dubo.util.DuboRuleUtils;
 import cn.cherish.dubo.dubo.util.DuboUtils;
 import cn.cherish.dubo.dubo.util.DuboUtils.History;
@@ -391,6 +392,12 @@ public abstract class AbstractService {
             } catch (Exception e) {
                 log.error("MailUtils.send error, ", e);
                 sendMail = false;
+            }
+
+            try {
+                AlertOverUtils.send(task.mailSubject, task.mailContent, "");
+            } catch (Exception e) {
+                log.error("AlertOverUtils.send error, ", e);
             }
 
             log.info("dealMailTask,sendMail:{}", sendMail);

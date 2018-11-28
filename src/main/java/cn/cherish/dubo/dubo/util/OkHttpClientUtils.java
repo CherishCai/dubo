@@ -25,13 +25,18 @@ public class OkHttpClientUtils {
         return client;
     }
 
+    public static Request postReq(String url, RequestBody body) {
+        return new Request.Builder()
+            .url(url)
+            .post(body)
+            .build();
+    }
+
     public static Request postJsonReq(String url, String json) {
         RequestBody body = RequestBody.create(JSON, json);
-        return new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
+        return postReq(url, body);
     }
+
     public static Request getReq(String url) {
         return new Request.Builder()
                 .url(url)
