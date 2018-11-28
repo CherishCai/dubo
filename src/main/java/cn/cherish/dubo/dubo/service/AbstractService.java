@@ -60,8 +60,15 @@ public abstract class AbstractService {
     public volatile List<Term> termsCache = Collections.emptyList();
     public volatile List<Term> termsCachev4 = Collections.emptyList();
 
+    protected String mailSubject = "飞艇";
+    protected String mailContent = "";
+
+    protected String url = "http://ft.zzj321.com";
+    protected int evenOddTickNum = 7;
+
     protected static final Queue<SmsTask> smsTaskQueue = new ConcurrentLinkedQueue<>();
     protected static final Queue<MailTask> mailTaskQueue = new ConcurrentLinkedQueue<>();
+    protected static final Queue<AlertTask> alertTaskQueue = new ConcurrentLinkedQueue<>();
 
     public TermCacheResp getTermsCache(){
         List<Term> list = termsCachev4;
@@ -394,12 +401,6 @@ public abstract class AbstractService {
                 sendMail = false;
             }
 
-            try {
-                AlertOverUtils.send(task.mailSubject, task.mailContent, "");
-            } catch (Exception e) {
-                log.error("AlertOverUtils.send error, ", e);
-            }
-
             log.info("dealMailTask,sendMail:{}", sendMail);
             // 添加到重试
             if (!sendMail) {
@@ -408,6 +409,244 @@ public abstract class AbstractService {
         }
 
 //        mailTaskQueue.addAll(failureList);
+    }
+
+    @Scheduled(fixedDelay = 2 * 1000, initialDelay = 10 * 1000)
+    public void dealAlertTask() {
+        log.info("dealAlertTask 2 sec, alertTaskQueue size:{}", alertTaskQueue.size());
+//        List<MailTask> failureList = new ArrayList<>();
+        while (!alertTaskQueue.isEmpty()) {
+            AlertTask task = alertTaskQueue.poll();
+            boolean send = true;
+            try {
+                send = AlertOverUtils.send(task.title, task.content, task.url);
+            } catch (Exception e) {
+                log.error("AlertOverUtils.send error, ", e);
+                send = false;
+            }
+
+            log.info("dealAlertTask,send:{}", send);
+            // 添加到重试
+            if (!send) {
+//                failureList.add(task);
+            }
+        }
+
+    }
+
+
+    /**
+     * 单双 ❌ 五次
+     */
+    protected void evenOddTick(List<Term> terms) {
+        List<Term> list = terms;
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+
+        int size = list.size();
+        Term term = list.get(size - 2);
+        Long termNum = term.getTermNum();
+
+        int len = term.getTermDataArr().length / 3;
+        boolean[][] evenOddBool = new boolean[evenOddTickNum][len];
+
+        for (int k = 0; k < evenOddTickNum; k++) {
+            int cur = size - 1 - evenOddTickNum + k;
+
+            Term curTerm = list.get(cur);
+            Integer[] curTermDataArr = curTerm.getTermDataArr();
+
+            Term nextTerm = list.get(cur + 1);
+            Integer[] nextTermDataArr = nextTerm.getTermDataArr();
+
+            for (int i = 0; i < len; i++) {
+                Integer curI = curTermDataArr[i*3];
+
+                // 寻找到下一列中与当前列相等的值，取得下一列的与前一列值
+                for (int j = 0; j < len; j++) {
+
+                    Integer nextI = nextTermDataArr[j*3];
+                    if (Objects.equals(nextI, curI)) {
+                        Integer nextEvenOdd = nextTermDataArr[j*3+1];
+                        Integer curEvenOdd = curTermDataArr[j*3 + 1];
+
+                        // 赋值给当前位置
+                        evenOddBool[k][i] = Objects.equals(curEvenOdd, nextEvenOdd);
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
+        printArr(len, evenOddBool);
+        // 计算false
+        for (int i = 0; i < len; i++) {
+            boolean isFalseTick = false;
+            for (int j = 0; j < evenOddTickNum; j++) {
+                if (evenOddBool[j][i]) {
+                    isFalseTick = true;
+                    break;
+                }
+            }
+
+            // 这一列满足全部false
+            if (!isFalseTick) {
+                // 列号
+                int c = i + 1;
+
+                String content = "<p style='font-size:36px'>"
+                    + "<a href='"+url+"'>连续打X " + evenOddTickNum + "次</a><br>"
+                    + "<b style='color:red'>种类：单双</b><br>"
+                    + "期号：" + termNum + "<br>"
+                    + "列号：" + c + "<br>"
+                    + "时间：" + new Date() + "<br>"
+                    + "</p>";
+
+                String alertContent = ""
+                    + "连续打X " + evenOddTickNum + "次\r\n"
+                    + "种类：单双\r\n"
+                    + "期号：" + termNum + "\r\n"
+                    + "列号：" + c + "\n"
+                    + "时间：" + new Date() + "\n"
+                    + "";
+
+                SmsTask smsTask = SmsTask.builder()
+                    .phoneNums(SMSUtils.phones2)
+                    .smsCode("X" + c + SMSUtils.randomCode())
+                    .build();
+                smsTaskQueue.add(smsTask);
+
+                MailTask mailTask = MailTask.builder()
+                    .mailTargets(MailUtils.targets)
+                    .mailSubject(mailSubject)
+                    .mailContent(content)
+                    .build();
+                mailTaskQueue.add(mailTask);
+
+                AlertTask alertTask = AlertTask.builder()
+                    .title(mailSubject)
+                    .title(alertContent)
+                    .url(url)
+                    .build();
+                alertTaskQueue.add(alertTask);
+            }
+        }
+    }
+
+    /**
+     * 大小 ❌ 五次
+     */
+    protected void bigSmallTick(List<Term> terms) {
+        List<Term> list = terms;
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+
+        int size = list.size();
+        Term term = list.get(size - 2);
+        Long termNum = term.getTermNum();
+
+        int len = term.getTermDataArr().length / 3;
+        boolean[][] keepBool = new boolean[evenOddTickNum][len];
+
+        for (int k = 0; k < evenOddTickNum; k++) {
+            int cur = size - 1 - evenOddTickNum + k;
+
+            Term curTerm = list.get(cur);
+            Integer[] curTermDataArr = curTerm.getTermDataArr();
+
+            Term nextTerm = list.get(cur + 1);
+            Integer[] nextTermDataArr = nextTerm.getTermDataArr();
+
+            for (int i = 0; i < len; i++) {
+                Integer curI = curTermDataArr[i*3];
+
+                // 寻找到下一列中与当前列相等的值，取得下一列的与前一列值
+                for (int j = 0; j < len; j++) {
+
+                    Integer nextI = nextTermDataArr[j*3];
+                    if (Objects.equals(nextI, curI)) {
+                        Integer nextEvenOdd = nextTermDataArr[j*3+2];
+                        Integer curEvenOdd = curTermDataArr[j*3 + 2];
+
+                        // 赋值给当前位置
+                        keepBool[k][i] = Objects.equals(curEvenOdd, nextEvenOdd);
+                        break;
+                    }
+
+                }
+
+            }
+        }
+
+        printArr(len, keepBool);
+        // 计算false
+        for (int i = 0; i < len; i++) {
+            boolean isFalseTick = false;
+            for (int j = 0; j < evenOddTickNum; j++) {
+                if (keepBool[j][i]) {
+                    isFalseTick = true;
+                    break;
+                }
+            }
+
+            // 这一列满足全部false
+            if (!isFalseTick) {
+                // 列号
+                int c = i + 1;
+
+                String content = "<p style='font-size:36px'>"
+                    + "<a href='"+url+"'>连续打X " + evenOddTickNum + "次</a><br>"
+                    + "<b style='color:red'>种类：大小</b><br>"
+                    + "期号：" + termNum + "<br>"
+                    + "列号：" + c + "<br>"
+                    + "时间：" + new Date() + "<br>"
+                    + "</p>";
+
+                String alertContent = ""
+                    + "连续打X " + evenOddTickNum + "次\r\n"
+                    + "种类：大小\r\n"
+                    + "期号：" + termNum + "\r\n"
+                    + "列号：" + c + "\n"
+                    + "时间：" + new Date() + "\n"
+                    + "";
+
+                SmsTask smsTask = SmsTask.builder()
+                    .phoneNums(SMSUtils.phones2)
+                    .smsCode("X" + c + SMSUtils.randomCode())
+                    .build();
+                smsTaskQueue.add(smsTask);
+
+                MailTask mailTask = MailTask.builder()
+                    .mailTargets(MailUtils.targets)
+                    .mailSubject(mailSubject)
+                    .mailContent(content)
+                    .build();
+                mailTaskQueue.add(mailTask);
+
+                AlertTask alertTask = AlertTask.builder()
+                    .title(mailSubject)
+                    .title(alertContent)
+                    .url(url)
+                    .build();
+                alertTaskQueue.add(alertTask);
+            }
+        }
+    }
+
+    protected void printArr(int len, boolean[][] evenOddBool) {
+        for (int k = 0; k < evenOddTickNum; k++) {
+            for (int i = 0; i < len; i++) {
+                System.out.print((evenOddBool[k][i] ? 1 : 0) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     @Data
@@ -425,6 +664,15 @@ public abstract class AbstractService {
         String[] mailTargets;
         String mailSubject;
         String mailContent;
+    }
+
+    @Data
+    @Builder
+    static class AlertTask {
+
+        String title;
+        String content;
+        String url;
     }
 
 }

@@ -166,8 +166,14 @@ public class DuboService extends AbstractService {
     private static int tipNum1 = 10;
     private static int tipNum2 = 12;
 
-    private static String mailSubject = "赛车";
-    private static String mailContent = "";
+    {
+        mailSubject = "赛车";
+        mailContent = "";
+
+        url = "http://ft.zzj321.com";
+        evenOddTickNum = 8;
+    }
+
     @Override
     protected void afterDealHistory(List<Term> terms) {
         if (CollectionUtils.isEmpty(terms)) {
@@ -209,191 +215,6 @@ public class DuboService extends AbstractService {
         log.info("car needSendSMS:{}", needSendSMS);
         needSendSMS = false;
     }
-    private static final int EVEN_ODD_TICK_NUM = 8;
-    /**
-     * 单双 ❌ 五次
-     */
-    private void evenOddTick(List<Term> terms) {
-        List<Term> list = terms;
-        if (CollectionUtils.isEmpty(list)) {
-            return;
-        }
-
-
-        int size = list.size();
-        Term term = list.get(size - 2);
-        Long termNum = term.getTermNum();
-
-        int len = term.getTermDataArr().length / 3;
-        boolean[][] evenOddBool = new boolean[EVEN_ODD_TICK_NUM][len];
-
-        for (int k = 0; k < EVEN_ODD_TICK_NUM; k++) {
-            int cur = size - 1 - EVEN_ODD_TICK_NUM + k;
-
-            Term curTerm = list.get(cur);
-            Integer[] curTermDataArr = curTerm.getTermDataArr();
-
-            Term nextTerm = list.get(cur + 1);
-            Integer[] nextTermDataArr = nextTerm.getTermDataArr();
-
-            for (int i = 0; i < len; i++) {
-                Integer curI = curTermDataArr[i*3];
-
-                // 寻找到下一列中与当前列相等的值，取得下一列的与前一列值
-                for (int j = 0; j < len; j++) {
-
-                    Integer nextI = nextTermDataArr[j*3];
-                    if (Objects.equals(nextI, curI)) {
-                        Integer nextEvenOdd = nextTermDataArr[j*3+1];
-                        Integer curEvenOdd = curTermDataArr[j*3 + 1];
-
-                        // 赋值给当前位置
-                        evenOddBool[k][i] = Objects.equals(curEvenOdd, nextEvenOdd);
-                        break;
-                    }
-
-                }
-
-            }
-        }
-
-        printArr(len, evenOddBool);
-        // 计算false
-        for (int i = 0; i < len; i++) {
-            boolean isFalseTick = false;
-            for (int j = 0; j < EVEN_ODD_TICK_NUM; j++) {
-                if (evenOddBool[j][i]) {
-                    isFalseTick = true;
-                    break;
-                }
-            }
-
-            // 这一列满足全部false
-            if (!isFalseTick) {
-                // 列号
-                int c = i + 1;
-
-                String content = "<p style='font-size:36px'>"
-                    + "<a href='http://ft.zzj321.com'>连续打X " + EVEN_ODD_TICK_NUM + "次</a><br>"
-                    + "<b style='color:red'>种类：单双</b><br>"
-                    + "期号：" + termNum + "<br>"
-                    + "列号：" + c + "<br>"
-                    + "时间：" + new Date() + "<br>"
-                    + "</p>";
-
-                SmsTask smsTask = SmsTask.builder()
-                    .phoneNums(SMSUtils.phones2)
-                    .smsCode("X" + c + SMSUtils.randomCode())
-                    .build();
-                smsTaskQueue.add(smsTask);
-
-                MailTask mailTask = MailTask.builder()
-                    .mailTargets(MailUtils.targets)
-                    .mailSubject(mailSubject)
-                    .mailContent(content)
-                    .build();
-                mailTaskQueue.add(mailTask);
-            }
-        }
-    }
-
-    /**
-     * 大小 ❌ 五次
-     */
-    private void bigSmallTick(List<Term> terms) {
-        List<Term> list = terms;
-        if (CollectionUtils.isEmpty(list)) {
-            return;
-        }
-
-
-        int size = list.size();
-        Term term = list.get(size - 2);
-        Long termNum = term.getTermNum();
-
-        int len = term.getTermDataArr().length / 3;
-        boolean[][] keepBool = new boolean[EVEN_ODD_TICK_NUM][len];
-
-        for (int k = 0; k < EVEN_ODD_TICK_NUM; k++) {
-            int cur = size - 1 - EVEN_ODD_TICK_NUM + k;
-
-            Term curTerm = list.get(cur);
-            Integer[] curTermDataArr = curTerm.getTermDataArr();
-
-            Term nextTerm = list.get(cur + 1);
-            Integer[] nextTermDataArr = nextTerm.getTermDataArr();
-
-            for (int i = 0; i < len; i++) {
-                Integer curI = curTermDataArr[i*3];
-
-                // 寻找到下一列中与当前列相等的值，取得下一列的与前一列值
-                for (int j = 0; j < len; j++) {
-
-                    Integer nextI = nextTermDataArr[j*3];
-                    if (Objects.equals(nextI, curI)) {
-                        Integer nextEvenOdd = nextTermDataArr[j*3+2];
-                        Integer curEvenOdd = curTermDataArr[j*3 + 2];
-
-                        // 赋值给当前位置
-                        keepBool[k][i] = Objects.equals(curEvenOdd, nextEvenOdd);
-                        break;
-                    }
-
-                }
-
-            }
-        }
-
-        printArr(len, keepBool);
-        // 计算false
-        for (int i = 0; i < len; i++) {
-            boolean isFalseTick = false;
-            for (int j = 0; j < EVEN_ODD_TICK_NUM; j++) {
-                if (keepBool[j][i]) {
-                    isFalseTick = true;
-                    break;
-                }
-            }
-
-            // 这一列满足全部false
-            if (!isFalseTick) {
-                // 列号
-                int c = i + 1;
-
-                String content = "<p style='font-size:36px'>"
-                    + "<a href='http://ft.zzj321.com'>连续打X " + EVEN_ODD_TICK_NUM + "次</a><br>"
-                    + "<b style='color:red'>种类：大小</b><br>"
-                    + "期号：" + termNum + "<br>"
-                    + "列号：" + c + "<br>"
-                    + "时间：" + new Date() + "<br>"
-                    + "</p>";
-
-                SmsTask smsTask = SmsTask.builder()
-                    .phoneNums(SMSUtils.phones2)
-                    .smsCode("X" + c + SMSUtils.randomCode())
-                    .build();
-                smsTaskQueue.add(smsTask);
-
-                MailTask mailTask = MailTask.builder()
-                    .mailTargets(MailUtils.targets)
-                    .mailSubject(mailSubject)
-                    .mailContent(content)
-                    .build();
-                mailTaskQueue.add(mailTask);
-            }
-        }
-    }
-
-    private void printArr(int len, boolean[][] evenOddBool) {
-        for (int k = 0; k < EVEN_ODD_TICK_NUM; k++) {
-            for (int i = 0; i < len; i++) {
-                System.out.print((evenOddBool[k][i] ? 1 : 0) + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
     private void oddBig(List<Term> terms) {
         List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
