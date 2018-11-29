@@ -529,7 +529,7 @@ public abstract class AbstractService {
 
                 AlertTask alertTask = AlertTask.builder()
                     .title(mailSubject)
-                    .title(alertContent)
+                    .content(alertContent)
                     .url(url)
                     .build();
                 alertTaskQueue.add(alertTask);
@@ -631,7 +631,7 @@ public abstract class AbstractService {
 
                 AlertTask alertTask = AlertTask.builder()
                     .title(mailSubject)
-                    .title(alertContent)
+                    .content(alertContent)
                     .url(url)
                     .build();
                 alertTaskQueue.add(alertTask);

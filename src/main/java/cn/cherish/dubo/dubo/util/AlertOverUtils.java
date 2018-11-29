@@ -25,6 +25,8 @@ public class AlertOverUtils {
 
     public static boolean send(String title, String content, String ctxUtl) throws IOException {
         ctxUtl = StringUtils.defaultString(ctxUtl);
+        title = StringUtils.defaultString(title);
+        content = StringUtils.defaultString(content);
         RequestBody formBody = new FormBody.Builder()
             .add("source", SOURCE)
             .add("receiver", RECEIVER)
