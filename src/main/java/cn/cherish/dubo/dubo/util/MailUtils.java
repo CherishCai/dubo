@@ -19,7 +19,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
  */
 public class MailUtils {
 
-    public static final String[] targets = new String[]{"2696025182@qq.com", "785427346@qq.com"};
+    public static final String[] targets = new String[]{
+        "2696025182@qq.com", "239388908@qq.com", "zh20161111017@163.com", "785427346@qq.com"};
 
     private static final String HOST = "smtp.qq.com";
     private static final String SMTP = "smtp";
