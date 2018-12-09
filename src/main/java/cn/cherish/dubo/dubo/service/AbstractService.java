@@ -438,7 +438,7 @@ public abstract class AbstractService {
     /**
      * 单双 ❌ 五次
      */
-    protected void evenOddTick(List<Term> terms) {
+    protected void evenOddTick(List<Term> terms, int skip) {
         List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
@@ -453,12 +453,12 @@ public abstract class AbstractService {
         boolean[][] evenOddBool = new boolean[evenOddTickNum][len];
 
         for (int k = 0; k < evenOddTickNum; k++) {
-            int cur = size - 1 - evenOddTickNum + k;
+            int cur = size - skip - evenOddTickNum + k;
 
             Term curTerm = list.get(cur);
             Integer[] curTermDataArr = curTerm.getTermDataArr();
 
-            Term nextTerm = list.get(cur + 1);
+            Term nextTerm = list.get(cur + skip);
             Integer[] nextTermDataArr = nextTerm.getTermDataArr();
 
             for (int i = 0; i < len; i++) {
@@ -499,7 +499,7 @@ public abstract class AbstractService {
                 int c = i + 1;
 
                 String content = "<p style='font-size:36px'>"
-                    + "<a href='"+url+"'>连续打X " + evenOddTickNum + "次</a><br>"
+                    + "<a href='"+url+"'>间隔："+skip+" 连续打X：" + evenOddTickNum + "次</a><br>"
                     + "<b style='color:red'>种类：单双</b><br>"
                     + "期号：" + termNum + "<br>"
                     + "列号：" + c + "<br>"
@@ -507,7 +507,7 @@ public abstract class AbstractService {
                     + "</p>";
 
                 String alertContent = ""
-                    + "连续打X " + evenOddTickNum + "次\r\n"
+                    + "间隔："+skip+" 连续打X：" + evenOddTickNum + "次\r\n"
                     + "种类：单双\r\n"
                     + "期号：" + termNum + "\r\n"
                     + "列号：" + c + "\n"
@@ -540,7 +540,7 @@ public abstract class AbstractService {
     /**
      * 大小 ❌ 五次
      */
-    protected void bigSmallTick(List<Term> terms) {
+    protected void bigSmallTick(List<Term> terms, int skip) {
         List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
@@ -555,12 +555,12 @@ public abstract class AbstractService {
         boolean[][] keepBool = new boolean[evenOddTickNum][len];
 
         for (int k = 0; k < evenOddTickNum; k++) {
-            int cur = size - 1 - evenOddTickNum + k;
+            int cur = size - skip - evenOddTickNum + k;
 
             Term curTerm = list.get(cur);
             Integer[] curTermDataArr = curTerm.getTermDataArr();
 
-            Term nextTerm = list.get(cur + 1);
+            Term nextTerm = list.get(cur + skip);
             Integer[] nextTermDataArr = nextTerm.getTermDataArr();
 
             for (int i = 0; i < len; i++) {
@@ -601,7 +601,7 @@ public abstract class AbstractService {
                 int c = i + 1;
 
                 String content = "<p style='font-size:36px'>"
-                    + "<a href='"+url+"'>连续打X " + evenOddTickNum + "次</a><br>"
+                    + "<a href='"+url+"'>间隔："+skip+" 连续打X：" + evenOddTickNum + "次</a><br>"
                     + "<b style='color:red'>种类：大小</b><br>"
                     + "期号：" + termNum + "<br>"
                     + "列号：" + c + "<br>"
@@ -609,7 +609,7 @@ public abstract class AbstractService {
                     + "</p>";
 
                 String alertContent = ""
-                    + "连续打X " + evenOddTickNum + "次\r\n"
+                    + "间隔："+skip+" 连续打X：" + evenOddTickNum + "次\r\n"
                     + "种类：大小\r\n"
                     + "期号：" + termNum + "\r\n"
                     + "列号：" + c + "\n"
