@@ -464,13 +464,13 @@ public abstract class AbstractService {
             for (int i = 0; i < len; i++) {
                 Integer curI = curTermDataArr[i*3];
 
-                // 寻找到下一列中与当前列相等的值，取得下一列的与前一列值
+                // 寻找到下 skip 列中与当前列相等的值，取得下一列的与前一列值
                 for (int j = 0; j < len; j++) {
 
                     Integer nextI = nextTermDataArr[j*3];
                     if (Objects.equals(nextI, curI)) {
                         Integer nextEvenOdd = nextTermDataArr[j*3+1];
-                        Integer curEvenOdd = curTermDataArr[j*3 + 1];
+                        Integer curEvenOdd = list.get(cur + skip - 1).getTermDataArr()[j * 3 + 1];
 
                         // 赋值给当前位置
                         evenOddBool[k][i] = Objects.equals(curEvenOdd, nextEvenOdd);
@@ -572,7 +572,7 @@ public abstract class AbstractService {
                     Integer nextI = nextTermDataArr[j*3];
                     if (Objects.equals(nextI, curI)) {
                         Integer nextEvenOdd = nextTermDataArr[j*3+2];
-                        Integer curEvenOdd = curTermDataArr[j*3 + 2];
+                        Integer curEvenOdd = list.get(cur + skip - 1).getTermDataArr()[j * 3 + 2];
 
                         // 赋值给当前位置
                         keepBool[k][i] = Objects.equals(curEvenOdd, nextEvenOdd);
