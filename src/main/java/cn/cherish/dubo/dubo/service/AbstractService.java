@@ -446,7 +446,7 @@ public abstract class AbstractService {
 
 
         int size = list.size();
-        Term term = list.get(size - skip);
+        Term term = list.get(size - skip - 1);
         Long termNum = term.getTermNum();
 
         int len = term.getTermDataArr().length / 3;
@@ -548,7 +548,7 @@ public abstract class AbstractService {
 
 
         int size = list.size();
-        Term term = list.get(size - skip);
+        Term term = list.get(size - skip - 1);
         Long termNum = term.getTermNum();
 
         int len = term.getTermDataArr().length / 3;
