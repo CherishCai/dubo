@@ -438,7 +438,7 @@ public abstract class AbstractService {
     /**
      * 单双 ❌ 五次
      */
-    protected void evenOddTick(List<Term> terms, int skip) {
+    protected void evenOddTick(List<Term> terms, int skip, int evenOddTickNum) {
         List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
@@ -522,13 +522,13 @@ public abstract class AbstractService {
 
                 MailTask mailTask = MailTask.builder()
                     .mailTargets(MailUtils.targets)
-                    .mailSubject(mailSubject)
+                    .mailSubject(mailSubject+skip)
                     .mailContent(content)
                     .build();
                 mailTaskQueue.add(mailTask);
 
                 AlertTask alertTask = AlertTask.builder()
-                    .title(mailSubject)
+                    .title(mailSubject+skip)
                     .content(alertContent)
                     .url(url)
                     .build();
@@ -540,7 +540,7 @@ public abstract class AbstractService {
     /**
      * 大小 ❌ 五次
      */
-    protected void bigSmallTick(List<Term> terms, int skip) {
+    protected void bigSmallTick(List<Term> terms, int skip, int evenOddTickNum) {
         List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
@@ -624,13 +624,13 @@ public abstract class AbstractService {
 
                 MailTask mailTask = MailTask.builder()
                     .mailTargets(MailUtils.targets)
-                    .mailSubject(mailSubject)
+                    .mailSubject(mailSubject+skip)
                     .mailContent(content)
                     .build();
                 mailTaskQueue.add(mailTask);
 
                 AlertTask alertTask = AlertTask.builder()
-                    .title(mailSubject)
+                    .title(mailSubject+skip)
                     .content(alertContent)
                     .url(url)
                     .build();
