@@ -56,7 +56,7 @@ public class FlyService extends AbstractService {
     {
         mailSubject = "飞艇";
         mailContent = "";
-        url = "http://pk.qilin68.com";
+        url = "http://ft.zzj321.com";
         evenOddTickNum = 7;
     }
 

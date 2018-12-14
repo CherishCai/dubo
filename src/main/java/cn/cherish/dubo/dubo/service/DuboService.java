@@ -170,7 +170,7 @@ public class DuboService extends AbstractService {
         mailSubject = "赛车";
         mailContent = "";
 
-        url = "http://ft.zzj321.com";
+        url = "http://pk.qilin68.com";
         evenOddTickNum = 8;
     }
 
