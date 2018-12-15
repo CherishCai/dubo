@@ -482,7 +482,7 @@ public abstract class AbstractService {
             }
         }
 
-        printArr(len, evenOddBool);
+        printArr(len, evenOddBool, evenOddTickNum);
         // 计算false
         for (int i = 0; i < len; i++) {
             boolean isFalseTick = false;
@@ -584,7 +584,7 @@ public abstract class AbstractService {
             }
         }
 
-        printArr(len, keepBool);
+        printArr(len, keepBool, evenOddTickNum);
         // 计算false
         for (int i = 0; i < len; i++) {
             boolean isFalseTick = false;
@@ -639,7 +639,7 @@ public abstract class AbstractService {
         }
     }
 
-    protected void printArr(int len, boolean[][] evenOddBool) {
+    protected void printArr(int len, boolean[][] evenOddBool, int evenOddTickNum) {
         for (int k = 0; k < evenOddTickNum; k++) {
             for (int i = 0; i < len; i++) {
                 System.out.print((evenOddBool[k][i] ? 1 : 0) + " ");
