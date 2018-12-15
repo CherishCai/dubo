@@ -438,7 +438,7 @@ public abstract class AbstractService {
     /**
      * 单双 ❌ 五次
      */
-    protected void evenOddTick(List<Term> terms, int skip, int evenOddTickNum) {
+    protected void evenOddTick(final List<Term> terms, final int skip, final int evenOddTickNum) {
         List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
@@ -540,7 +540,7 @@ public abstract class AbstractService {
     /**
      * 大小 ❌ 五次
      */
-    protected void bigSmallTick(List<Term> terms, int skip, int evenOddTickNum) {
+    protected void bigSmallTick(final List<Term> terms, final int skip, final int evenOddTickNum) {
         List<Term> list = terms;
         if (CollectionUtils.isEmpty(list)) {
             return;
