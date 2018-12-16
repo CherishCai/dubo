@@ -171,7 +171,7 @@ public class DuboService extends AbstractService {
         mailContent = "";
 
         url = "http://pk.qilin68.com";
-        evenOddTickNum = 8;
+        evenOddTickNum = 10;
     }
 
     @Override
@@ -184,8 +184,8 @@ public class DuboService extends AbstractService {
         evenOddTick(terms, 1, evenOddTickNum);
         bigSmallTick(terms, 1, evenOddTickNum);
 
-        evenOddTick(terms, 2, 5);
-        bigSmallTick(terms, 2, 5);
+        evenOddTick(terms, 2, 10);
+        bigSmallTick(terms, 2, 10);
 
 
         bigOdd(terms);
