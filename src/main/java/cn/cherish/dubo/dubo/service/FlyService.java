@@ -57,7 +57,7 @@ public class FlyService extends AbstractService {
         mailSubject = "飞艇";
         mailContent = "";
         url = "http://ft.zzj321.com";
-        evenOddTickNum = 7;
+        evenOddTickNum = 9;
     }
 
     @Override
@@ -70,8 +70,8 @@ public class FlyService extends AbstractService {
         evenOddTick(terms, 1, evenOddTickNum);
         bigSmallTick(terms, 1, evenOddTickNum);
 
-        evenOddTick(terms, 2, 7);
-        bigSmallTick(terms, 2, 7);
+        evenOddTick(terms, 2, evenOddTickNum);
+        bigSmallTick(terms, 2, evenOddTickNum);
 
         bigOdd(terms);
         evenBig(terms);
