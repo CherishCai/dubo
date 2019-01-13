@@ -187,6 +187,8 @@ public class DuboService extends AbstractService {
         evenOddTick(terms, 2, 10);
         bigSmallTick(terms, 2, 10);
 
+        rule680(terms);
+        rule135(terms);
 
         bigOdd(terms);
         evenBig(terms);

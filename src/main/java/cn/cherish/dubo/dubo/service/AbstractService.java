@@ -13,6 +13,7 @@ import cn.cherish.dubo.dubo.util.IntUtils;
 import cn.cherish.dubo.dubo.util.MailUtils;
 import cn.cherish.dubo.dubo.util.SMSUtils;
 import cn.cherish.dubo.dubo.util.rule.DuboRule;
+import cn.cherish.dubo.dubo.util.rule2.Rule2Utils;
 import com.google.common.base.Joiner;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -66,7 +67,6 @@ public abstract class AbstractService {
     protected String url = "http://ft.zzj321.com";
     protected int evenOddTickNum = 7;
 
-    protected static final Queue<SmsTask> smsTaskQueue = new ConcurrentLinkedQueue<>();
     protected static final Queue<MailTask> mailTaskQueue = new ConcurrentLinkedQueue<>();
     protected static final Queue<AlertTask> alertTaskQueue = new ConcurrentLinkedQueue<>();
 
@@ -364,30 +364,6 @@ public abstract class AbstractService {
     }
 
     @Scheduled(fixedDelay = 2 * 1000, initialDelay = 10 * 1000)
-    public void dealSMSTask() {
-        log.info("dealSMSTask 2 sec, smsTaskQueue size:{}", smsTaskQueue.size());
-        List<SmsTask> failureList = new ArrayList<>();
-        while (!smsTaskQueue.isEmpty()) {
-            SmsTask task = smsTaskQueue.poll();
-            boolean sendSMS = true;
-            try {
-                sendSMS = SMSUtils.send(task.phoneNums, task.smsCode);
-            } catch (Exception e) {
-                log.error("SMSUtils.send error, ", e);
-                sendSMS = false;
-            }
-
-            log.info("dealSMSTask,sendSMS:{}", sendSMS);
-            // 添加到重试
-            if (!sendSMS) {
-//                failureList.add(task);
-            }
-        }
-
-        smsTaskQueue.addAll(failureList);
-    }
-
-    @Scheduled(fixedDelay = 2 * 1000, initialDelay = 10 * 1000)
     public void dealMailTask() {
         log.info("dealMailTask 2 sec, mailTaskQueue size:{}", mailTaskQueue.size());
 //        List<MailTask> failureList = new ArrayList<>();
@@ -433,6 +409,95 @@ public abstract class AbstractService {
         }
 
     }
+
+    /**
+     * 680
+     */
+    protected void rule680(final List<Term> terms) {
+        String mmm = "底680";
+        List<Set<Integer>> rules = Rule2Utils.rules680();
+
+        rule2(terms, rules, mmm);
+    }
+
+    /**
+     * 135
+     */
+    protected void rule135(final List<Term> terms) {
+        String mmm = "底135";
+        List<Set<Integer>> rules = Rule2Utils.rules135();
+
+        rule2(terms, rules, mmm);
+    }
+
+    protected void rule2(final List<Term> terms, List<Set<Integer>> rules, String mm) {
+        final int ruleSize = rules.size();
+
+        List<Term> list = terms;
+        if (CollectionUtils.isEmpty(list)) {
+            return;
+        }
+
+        int size = list.size();
+        Term term = list.get(size - 1);
+        Long termNum = term.getTermNum();
+
+        int len = term.getTermDataArr().length / 3;
+
+        for (int i = 0; i < len; i++) {
+
+            List<Integer> rulesTmp = new ArrayList<>(ruleSize);
+            for (int k = 0; k < ruleSize; k++) {
+                int cur = size - ruleSize + k;
+
+                Term curTerm = list.get(cur);
+                Integer curTermDataI = curTerm.getTermDataArr()[i * 3];
+
+                if (rules.size() > k) {
+                    if (rules.get(k).contains(curTermDataI)) {
+                        rulesTmp.add(curTermDataI);
+                    }
+                }
+            }
+
+            if (rules.size() - 1 == rulesTmp.size()) {
+                // 列号
+                int c = i + 1;
+                String join = Joiner.on(" ").join(rulesTmp);
+
+                String content = "<p style='font-size:36px'>"
+                    + "<a href='" + url + "'>数字" + join + "</a><br>"
+                    + "<b style='color:red'>种类：" + mm + "</b><br>"
+                    + "期号：" + termNum + "<br>"
+                    + "列号：" + c + "<br>"
+                    + "时间：" + new Date() + "<br>"
+                    + "</p>";
+
+                String alertContent = ""
+                    + "数字：" + join + "\r\n"
+                    + "种类：" + mm + "\r\n"
+                    + "期号：" + termNum + "\r\n"
+                    + "列号：" + c + "\n"
+                    + "时间：" + new Date() + "\n"
+                    + "";
+
+                MailTask mailTask = MailTask.builder()
+                    .mailTargets(MailUtils.targets)
+                    .mailSubject(mailSubject + mm)
+                    .mailContent(content)
+                    .build();
+                mailTaskQueue.add(mailTask);
+
+                AlertTask alertTask = AlertTask.builder()
+                    .title(mailSubject + mm)
+                    .content(alertContent)
+                    .url(url)
+                    .build();
+                alertTaskQueue.add(alertTask);
+            }
+        }
+    }
+
 
 
     /**
@@ -513,12 +578,6 @@ public abstract class AbstractService {
                     + "列号：" + c + "\n"
                     + "时间：" + new Date() + "\n"
                     + "";
-
-                SmsTask smsTask = SmsTask.builder()
-                    .phoneNums(SMSUtils.phones2)
-                    .smsCode("X" + c + SMSUtils.randomCode())
-                    .build();
-                smsTaskQueue.add(smsTask);
 
                 MailTask mailTask = MailTask.builder()
                     .mailTargets(MailUtils.targets)
@@ -615,13 +674,6 @@ public abstract class AbstractService {
                     + "列号：" + c + "\n"
                     + "时间：" + new Date() + "\n"
                     + "";
-
-                SmsTask smsTask = SmsTask.builder()
-                    .phoneNums(SMSUtils.phones2)
-                    .smsCode("X" + c + SMSUtils.randomCode())
-                    .build();
-                smsTaskQueue.add(smsTask);
-
                 MailTask mailTask = MailTask.builder()
                     .mailTargets(MailUtils.targets)
                     .mailSubject(mailSubject+skip)
@@ -647,14 +699,6 @@ public abstract class AbstractService {
             System.out.println();
         }
         System.out.println();
-    }
-
-    @Data
-    @Builder
-    static class SmsTask {
-
-        String smsCode;
-        Set<String> phoneNums;
     }
 
     @Data

@@ -1,0 +1,7 @@
+
+# 是否打开swagger
+swagger:
+  enable: false
+
+server:
+  port: 8888
