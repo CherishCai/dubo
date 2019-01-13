@@ -448,7 +448,7 @@ public abstract class AbstractService {
 
             List<Integer> rulesTmp = new ArrayList<>(ruleSize);
             for (int k = 0; k < ruleSize; k++) {
-                int cur = size - ruleSize + k;
+                int cur = size - 1 - k;
 
                 Term curTerm = list.get(cur);
                 Integer curTermDataI = curTerm.getTermDataArr()[i * 3];
