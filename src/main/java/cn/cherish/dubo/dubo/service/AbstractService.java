@@ -460,7 +460,7 @@ public abstract class AbstractService {
                 }
             }
 
-            if (rules.size() - 1 == rulesTmp.size()) {
+            if (rules.size() == rulesTmp.size()) {
                 // 列号
                 int c = i + 1;
                 String join = Joiner.on(" ").join(rulesTmp);
