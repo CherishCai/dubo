@@ -19,11 +19,23 @@ public class Rule2Utils {
     static List<Set<Integer>> rules680 = Lists.newArrayList(r2479, r135, r680, r135, r680);
     static List<Set<Integer>> rules135 = Lists.newArrayList(r2479, r680, r135, r680, r135);
 
+    static List<Set<Integer>> rules135_2479 = Lists.newArrayList(r135, r680, r135, r680, r2479);
+    static List<Set<Integer>> rules680_2479 = Lists.newArrayList(r680, r135, r680, r135, r2479);
+
+
     public static List<Set<Integer>> rules680(){
         return rules680;
     }
     public static List<Set<Integer>> rules135(){
         return rules135;
     }
+
+    public static List<Set<Integer>> rules680_2479(){
+        return rules680_2479;
+    }
+    public static List<Set<Integer>> rules135_2479(){
+        return rules135_2479;
+    }
+
 
 }

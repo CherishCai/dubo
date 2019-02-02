@@ -190,6 +190,9 @@ public class DuboService extends AbstractService {
         rule680(terms);
         rule135(terms);
 
+        rules680_2479(terms);
+        rule135_2479(terms);
+
         bigOdd(terms);
         evenBig(terms);
         oddBig(terms);

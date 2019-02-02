@@ -411,6 +411,26 @@ public abstract class AbstractService {
     }
 
     /**
+     * 680_2479
+     */
+    protected void rules680_2479(final List<Term> terms) {
+        String mmm = "顶680_底2479";
+        List<Set<Integer>> rules = Rule2Utils.rules680_2479();
+
+        rule2(terms, rules, mmm);
+    }
+
+    /**
+     * 135_2479
+     */
+    protected void rule135_2479(final List<Term> terms) {
+        String mmm = "顶135_底2479";
+        List<Set<Integer>> rules = Rule2Utils.rules135_2479();
+
+        rule2(terms, rules, mmm);
+    }
+
+    /**
      * 680
      */
     protected void rule680(final List<Term> terms) {
