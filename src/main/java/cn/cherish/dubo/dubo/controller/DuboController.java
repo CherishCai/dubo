@@ -1,7 +1,7 @@
 package cn.cherish.dubo.dubo.controller;
 
 import cn.cherish.dubo.dubo.dto.resp.DuboMsgResp;
-import cn.cherish.dubo.dubo.service.DuboService;
+import cn.cherish.dubo.dubo.service.CarService;
 import cn.cherish.dubo.dubo.service.FlyService;
 import cn.cherish.dubo.dubo.util.SMSUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,18 +22,18 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin("*")
 public class DuboController {
 
-    private final DuboService duboService;
+    private final CarService carService;
     private final FlyService flyService;
 
     @Autowired
-    public DuboController(DuboService duboService, FlyService flyService) {
-        this.duboService = duboService;
+    public DuboController(CarService carService, FlyService flyService) {
+        this.carService = carService;
         this.flyService = flyService;
     }
 
     @GetMapping("/data")
     public ApiResult<DuboMsgResp> data(@RequestParam(required = false) String kk) {
-        return new ApiResult<>(duboService.getMsg(kk));
+        return new ApiResult<>(carService.getMsg(kk));
     }
 
     @GetMapping("/fly")
@@ -43,7 +43,7 @@ public class DuboController {
 
     @GetMapping("/cars/term/cache")
     public ApiResult<?> termCache() {
-        return new ApiResult<>(duboService.getTermsCache());
+        return new ApiResult<>(carService.getTermsCache());
     }
 
     @GetMapping("/flys/term/cache")

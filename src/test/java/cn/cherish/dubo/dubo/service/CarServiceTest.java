@@ -9,13 +9,13 @@ import org.junit.Test;
  * @version 1.0
  * @date 2018/4/26 13:07
  */
-public class DuboServiceTest {
+public class CarServiceTest {
 
-    DuboService duboService;
+    CarService carService;
 
     @Before
     public void setUp() throws Exception {
-        duboService = new DuboService();
+        carService = new CarService();
 //        duboService.termService = new TermServiceImpl();
     }
 
@@ -26,14 +26,14 @@ public class DuboServiceTest {
     @Test
     public void init() throws Exception {
 
-        System.out.println("duboService = " + duboService);
+        System.out.println("duboService = " + carService);
     }
 
     @Test
     public void dealCache() throws Exception {
-        duboService.dealCache();
+        carService.dealCache();
 
-        System.out.println("duboService = " + duboService);
+        System.out.println("duboService = " + carService);
     }
 
 }

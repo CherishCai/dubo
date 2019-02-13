@@ -28,7 +28,7 @@ import org.springframework.util.CollectionUtils;
  */
 @Slf4j
 @Service
-public class DuboService extends AbstractService {
+public class CarService extends AbstractService {
 
 //    private static final ScheduledExecutorService sch = new ScheduledThreadPoolExecutor(2);
 //    private static final ScheduledExecutorService schInLoop = new ScheduledThreadPoolExecutor(2);
