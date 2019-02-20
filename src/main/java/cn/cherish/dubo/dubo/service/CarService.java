@@ -171,7 +171,7 @@ public class CarService extends AbstractService {
         mailContent = "";
 
         url = "http://pk.qilin68.com";
-        evenOddTickNum = 5;
+        evenOddTickNum = 10;
     }
 
     @Override
