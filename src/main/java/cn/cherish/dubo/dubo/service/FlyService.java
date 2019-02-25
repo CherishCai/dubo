@@ -73,6 +73,8 @@ public class FlyService extends AbstractService {
         evenOddTick(terms, 2, evenOddTickNum);
         bigSmallTick(terms, 2, evenOddTickNum);
 
+        rule24_680(terms);
+
         rule680(terms);
         rule135(terms);
 
