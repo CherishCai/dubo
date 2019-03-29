@@ -65,7 +65,7 @@ public abstract class AbstractService {
     protected String mailContent = "";
 
     protected String url = "http://ft.zzj321.com";
-    protected int evenOddTickNum = 7;
+    protected int evenOddTickNum = 13;
 
     protected static final Queue<MailTask> mailTaskQueue = new ConcurrentLinkedQueue<>();
     protected static final Queue<AlertTask> alertTaskQueue = new ConcurrentLinkedQueue<>();
