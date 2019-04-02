@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DuboUtils {
     private DuboUtils(){}
 
-    public static final String HOST = "http://kai.ny1819.com";
+    public static final String HOST = "http://kk.jsk412.vip";
     private static ThreadLocalRandom random = ThreadLocalRandom.current();
 
     public static History getHistory(int count) {
@@ -64,7 +64,7 @@ public class DuboUtils {
 
         String t = System.currentTimeMillis() + "" + random.nextInt(9999);
 
-        String url = "http://kai.emw207.com/xyft/getHistoryData.do?count=%s&t=%s";
+        String url = HOST+"/xyft/getHistoryData.do?count=%s&t=%s";
 
         url = String.format(url, count, t);
 
