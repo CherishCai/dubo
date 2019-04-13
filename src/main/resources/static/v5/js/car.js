@@ -21,8 +21,8 @@ function syncData(){
     const list = result.data.records;
     const len = list.length;
 
+    $("#dataRow24_680").empty();
     for(var i=0; i<=10 ;i++){
-        $("#dataRow"+i).empty();
 
         const i_3 = i*3;
         const ruleLen = rules24_680.length;
@@ -59,9 +59,8 @@ function syncData(){
                 "<p class='blue'>" + curTermNum + "</p>" +
                 '</div>';
 
-            $("#dataRow"+i).append(html);
+            $("#dataRow24_680").append(html);
         }
-        $("#dataRow" + i).append("第" + (i + 1) + "列");
     } //end for
 
     newestNum = newestNumTmp;
