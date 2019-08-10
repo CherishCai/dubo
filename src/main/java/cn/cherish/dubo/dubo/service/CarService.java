@@ -2,10 +2,7 @@ package cn.cherish.dubo.dubo.service;
 
 import cn.cherish.dubo.dubo.entity.Term;
 import cn.cherish.dubo.dubo.util.DuboUtils;
-import com.google.common.collect.Sets;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -41,6 +38,16 @@ public class CarService extends AbstractService {
         long end = System.currentTimeMillis();
 
         log.info("deal {} in cache use {}ms", type, (end - start));
+    }
+
+    @Override
+    protected String getType() {
+        return type;
+    }
+
+    @Override
+    protected String getName() {
+        return name;
     }
 
     @Override

@@ -42,6 +42,16 @@ public class FlyService extends AbstractService {
     }
 
     @Override
+    protected String getType() {
+        return type;
+    }
+
+    @Override
+    protected String getName() {
+        return name;
+    }
+
+    @Override
     protected void afterDealHistory(List<Term> sortedTerms) {
         if (CollectionUtils.isEmpty(sortedTerms)) {
             return;

@@ -35,8 +35,6 @@ import org.springframework.util.CollectionUtils;
 public abstract class AbstractService {
 
     public volatile String HOST = "http://47.75.78.66:8080";
-    public volatile String type = "car";
-    public volatile String name = "赛车";
     public volatile String SPILT = ",";
     public volatile String newestNumStr = "";
     public volatile Map<String, List<Combination>> allMap = new HashMap<>();
@@ -50,6 +48,9 @@ public abstract class AbstractService {
     protected String url = "http://ft.zzj321.com";
 
     protected static final Queue<AlertTask> alertTaskQueue = new ConcurrentLinkedQueue<>();
+
+    protected abstract String getType();
+    protected abstract String getName();
 
     public TermCacheResp getTermsCache(){
         List<Term> list = termsCacheWithBigOdd;
@@ -285,7 +286,7 @@ public abstract class AbstractService {
                     }
 
                 }
-                log.info("{} c={},r={},termNum={},countFail={}", name, c, r, termNum, countFail);
+                log.info("{} c={},r={},termNum={},countFail={}", getName(), c, r, termNum, countFail);
 
             }// 遍历每行 首末最后处理
 
@@ -320,13 +321,13 @@ public abstract class AbstractService {
             if (isAlert) {
 
                 String alertContent = ""
-                    + "种类：" + name + "24，前判680，后判67890\r\n"
+                    + "种类：" + getName() + "24，前判680，后判67890\r\n"
                     + "错误：" + countFail + "次\r\n"
                     + "列号：" + (c + 1) + "\n"
                     + "时间：" + new Date() + "\n"
                     + "";
                 AbstractService.AlertTask alertTask = AbstractService.AlertTask.builder()
-                    .title(name)
+                    .title(getName())
                     .content(alertContent)
                     .url(url)
                     .build();
