@@ -21,7 +21,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class DuboUtils {
     private DuboUtils(){}
 
-    public static final String HOST = "http://kk.jsk412.vip";
+    public static final String HOST = "http://ok.jsk412.vip";
     private static ThreadLocalRandom random = ThreadLocalRandom.current();
 
     public static History getHistory(int count) {
