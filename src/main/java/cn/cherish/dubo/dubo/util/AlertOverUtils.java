@@ -19,7 +19,7 @@ public class AlertOverUtils {
     private static final String RECEIVER = "g-3af7b687-93ef-465b-907c-be1db046";
 
     public static void main(String[] args) throws IOException {
-        boolean send = send("gg", "55\r\n ggg","https://cn.bing.com/");
+        boolean send = send("TEST", "测试\r\nTEST","https://cn.bing.com/");
         System.out.println("send = " + send);
     }
 
