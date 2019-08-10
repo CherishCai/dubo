@@ -42,11 +42,12 @@ public class FlyService extends AbstractService {
     }
 
     @Override
-    protected void afterDealHistory(List<Term> terms) {
-        if (CollectionUtils.isEmpty(terms)) {
+    protected void afterDealHistory(List<Term> sortedTerms) {
+        if (CollectionUtils.isEmpty(sortedTerms)) {
             return;
         }
 
+        data24(sortedTerms);
     }
 
 }
