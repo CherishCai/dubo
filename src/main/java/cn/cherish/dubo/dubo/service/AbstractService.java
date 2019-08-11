@@ -9,6 +9,7 @@ import cn.cherish.dubo.dubo.util.AlertOverUtils;
 import cn.cherish.dubo.dubo.util.DuboUtils;
 import cn.cherish.dubo.dubo.util.DuboUtils.History;
 import cn.cherish.dubo.dubo.util.IntUtils;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
 import java.util.Collections;
 import java.util.Comparator;
@@ -223,13 +224,16 @@ public abstract class AbstractService {
     }
 
     protected int data24CountFailAlert = 6;
-    protected void data24(List<Term> sortedTerms){
+
+    protected final void dataMajor(final List<Term> sortedTerms, final int countFailAlert,
+        Set<Integer> dataBeforeMajor, Set<Integer> dataMajor, Set<Integer> dataAfterMajor) {
+
+        String major = Joiner.on("").join(dataMajor.stream().sorted().collect(Collectors.toList()));
+        String beforeMajor = Joiner.on("").join(dataBeforeMajor.stream().sorted().collect(Collectors.toList()));
+        String afterMajor = Joiner.on("").join(dataAfterMajor.stream().sorted().collect(Collectors.toList()));
+
         int size = sortedTerms.size();
         int columnLen = sortedTerms.get(0).getTermDataArr().length;
-
-        Set<Integer> data67890 = Sets.newHashSet(6, 7, 8, 9, 10);
-        Set<Integer> data24 = Sets.newHashSet(2, 4);
-        Set<Integer> data680 = Sets.newHashSet(6, 8, 10);
 
         // 遍历每列
         for (int c = 0; c < columnLen / 3; c++) {
@@ -244,26 +248,21 @@ public abstract class AbstractService {
                 Long termNum = curTerm.getTermNum();
                 Integer[] termDataArr = curTerm.getTermDataArr();
                 Integer termData = termDataArr[c * 3];
-                // 0:小，1:大
-                Integer bigSmall = termDataArr[c * 3 + 2];
 
                 // 判断匹配24
-                if (!data24.contains(termData)) {
+                if (!dataMajor.contains(termData)) {
                     continue;
                 }
 
                 // 前面一行
-                Integer[] preTermDataArr = sortedTerms.get(r - 1).getTermDataArr();
-                Integer preTermData = preTermDataArr[c * 3];
+                Integer preTermData = sortedTerms.get(r - 1).getTermDataArr()[c * 3];
 
                 // 后面一行
-                Integer[] nextTermDataArr = sortedTerms.get(r + 1).getTermDataArr();
-                Integer nextTermData = nextTermDataArr[c * 3];
-                Integer nextBigSmall = nextTermDataArr[c * 3 + 2];
+                Integer nextTermData = sortedTerms.get(r + 1).getTermDataArr()[c * 3];
 
                 // 前面一行的判断
-                if (data680.contains(preTermData)) {
-                    if (1 == nextBigSmall) {
+                if (dataBeforeMajor.contains(preTermData)) {
+                    if (dataAfterMajor.contains(nextTermData)) {
                         countFail = 0;
                     } else {
                         countFail++;
@@ -271,48 +270,47 @@ public abstract class AbstractService {
                 }
 
                 // 后面一行的判断
-                if (data67890.contains(nextTermData)) {
+                if (dataAfterMajor.contains(nextTermData)) {
                     // 判断是否最后一行
                     if (r == size - 2) {
                         // 快要告警了！！！！！
                         break;
                     }
 
-                    Integer next2BigSmall = sortedTerms.get(r + 2).getTermDataArr()[c * 3 + 2];
-                    if (1 == next2BigSmall) {
+                    Integer next2TermData = sortedTerms.get(r + 2).getTermDataArr()[c * 3];
+                    if (dataAfterMajor.contains(next2TermData)) {
                         countFail = 0;
                     } else {
                         countFail++;
                     }
 
                 }
-                log.info("{} c={},r={},termNum={},countFail={}", getName(), c, r, termNum, countFail);
+                log.info("{} {}-{}-{} c={},r={},termNum={},countFail={}",
+                    getName(), beforeMajor, major, afterMajor, c, r, termNum, countFail);
 
             }// 遍历每行 首末最后处理
 
             // 是都达到预警阈值
-            if (countFail < data24CountFailAlert) {
+            if (countFail < countFailAlert) {
                 continue;
             }
 
             // 最新一行
-            Integer[] lastTermDataArr = sortedTerms.get(size - 1).getTermDataArr();
-            Integer lastTermData = lastTermDataArr[c * 3];
-            // 0:小，1:大
-            Integer lastBigSmall = lastTermDataArr[c * 3 + 2];
+            Integer lastTermData = sortedTerms.get(size - 1).getTermDataArr()[c * 3];
+            // 第二新
+            Integer last2TermData = sortedTerms.get(size - 2).getTermDataArr()[c * 3];
 
             boolean isAlert = false;
-
             // 24 该判断前一行是大
-            if (data24.contains(lastTermData)) {
-                if (1 == sortedTerms.get(size - 2).getTermDataArr()[c * 3 + 2]) {
+            if (dataMajor.contains(lastTermData)) {
+                if (dataAfterMajor.contains(last2TermData)) {
                     // do alert
                     isAlert = true;
                 }
             }
             // 大  该判断前一行是24
-            if (1 == lastBigSmall) {
-                if (data24.contains(sortedTerms.get(size - 2).getTermDataArr()[c * 3])) {
+            if (dataAfterMajor.contains(lastTermData)) {
+                if (dataMajor.contains(last2TermData)) {
                     // do alert
                     isAlert = true;
                 }
@@ -321,12 +319,12 @@ public abstract class AbstractService {
             if (isAlert) {
 
                 String alertContent = ""
-                    + "种类：" + getName() + "24，前判680，后判67890\r\n"
+                    + "种类：" + getName() + major + "，前判" + beforeMajor + "，后判" + afterMajor + "\r\n"
                     + "错误：" + countFail + "次\r\n"
                     + "列号：" + (c + 1) + "\n"
                     + "时间：" + new Date() + "\n"
                     + "";
-                AbstractService.AlertTask alertTask = AbstractService.AlertTask.builder()
+                AlertTask alertTask = AlertTask.builder()
                     .title(getName())
                     .content(alertContent)
                     .url(url)

@@ -2,7 +2,9 @@ package cn.cherish.dubo.dubo.service;
 
 import cn.cherish.dubo.dubo.entity.Term;
 import cn.cherish.dubo.dubo.util.DuboUtils;
+import com.google.common.collect.Sets;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -57,7 +59,20 @@ public class FlyService extends AbstractService {
             return;
         }
 
-        data24(sortedTerms);
+        Set<Integer> data67890 = Sets.newHashSet(6, 7, 8, 9, 10);
+        Set<Integer> data24 = Sets.newHashSet(2, 4);
+        Set<Integer> data680 = Sets.newHashSet(6, 8, 10);
+
+        Set<Integer> data12345 = Sets.newHashSet(1, 2, 3, 4, 5);
+        Set<Integer> data79 = Sets.newHashSet(7, 9);
+        Set<Integer> data135 = Sets.newHashSet(1, 3, 5);
+
+
+        dataMajor(sortedTerms, data24CountFailAlert, data680, data24, data67890);
+
+        dataMajor(sortedTerms, data24CountFailAlert, data135, data24, data12345);
+
+        dataMajor(sortedTerms, data24CountFailAlert, data680, data79, data67890);
     }
 
 }
