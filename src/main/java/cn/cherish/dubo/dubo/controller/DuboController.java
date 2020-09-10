@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
  * @since 2018-04-26
  */
 @Slf4j
-@RestController
-@RequestMapping("/dubo")
+//@RestController
+//@RequestMapping("/dubo")
 @CrossOrigin("*")
 public class DuboController {
 

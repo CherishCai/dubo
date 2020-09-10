@@ -16,7 +16,7 @@ import org.springframework.util.CollectionUtils;
  * @date 2018/4/26 12:18
  */
 @Slf4j
-@Service
+//@Service
 public class FlyService extends AbstractService {
 
     public volatile String type = "fly";
