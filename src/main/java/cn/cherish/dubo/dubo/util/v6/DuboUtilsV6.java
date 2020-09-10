@@ -19,7 +19,9 @@ import okhttp3.ResponseBody;
 public final class DuboUtilsV6 {
     private DuboUtilsV6(){}
 
-    public static final String HOST = "https://api.apiose122.com";
+    // https://api.apiose122.com/pks/getPksHistoryList.do?lotCode=%s&t=%s
+    // http://123.lotterycar.com/api/agindex.php?/cp=jssc&do=getPksHistoryList.do&date=&lotCode=10057
+    public static final String HOST = "http://123.lotterycar.com";
     private static ThreadLocalRandom random = ThreadLocalRandom.current();
 
     private static final String lotCode = random.nextInt(10000, 20000) + "";
@@ -28,9 +30,9 @@ public final class DuboUtilsV6 {
 
         String t = System.currentTimeMillis() + "" + random.nextInt(9999);
 
-        String url = HOST + "/pks/getPksHistoryList.do?lotCode=%s&t=%s";
+        String url = HOST + "/api/agindex.php?/cp=jssc&do=getPksHistoryList.do&date=%s&lotCode=%s";
 
-        url = String.format(url, lotCode, t);
+        url = String.format(url, t, lotCode);
         log.info("getHistory url:{}", url);
 
         try {
