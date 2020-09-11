@@ -50,7 +50,7 @@ public final class DuboUtilsV6 {
                 return null;
             }
             String bodyString = body.string();
-            log.info("getHistory result:{}", bodyString);
+            log.info("getHistory result:{}", bodyString.substring(0, 200));
             return JSON.parseObject(bodyString, CarResult.class);
         } catch (Exception e) {
             log.error("getHistory error, url:{}", url, e);

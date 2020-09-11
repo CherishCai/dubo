@@ -63,7 +63,7 @@ public class CarResult {
              */
 
             private String preDrawTime;
-            private int preDrawIssue;
+            private long preDrawIssue;
             private String preDrawCode;
             private int sumFS;
             private int sumBigSamll;
