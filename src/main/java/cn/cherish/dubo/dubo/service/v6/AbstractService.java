@@ -257,10 +257,10 @@ public abstract class AbstractService {
 
                     String alertContent = ""
                             + "种类：" + getName() + " " + nn + "\r\n"
-                            + "错误：" + countFail + "次\r\n"
+                            + "错误：" + countFail + " 次\r\n"
                             + "行号：" + (r2TermNum) + "\n"
                             + "列号：" + (cFirst + 1) + "\n"
-                            + "列值：" + (termData) + "\n"
+                            + "数字：" + (termData) + "\n"
                             + "时间：" + new Date() + "\n"
                             + "";
                     AlertTask alertTask = AlertTask.builder()
