@@ -30,9 +30,9 @@ public final class DuboUtilsV6 {
 
         String t = System.currentTimeMillis() + "" + random.nextInt(9999);
 
-        String url = HOST + "/api/agindex.php?/cp=jssc&do=getPksHistoryList.do&date=%s&lotCode=%s";
+        String url = HOST + "/api/agindex.php?/cp=jssc&do=getPksHistoryList.do&date=&lotCode=%s";
 
-        url = String.format(url, t, lotCode);
+        url = String.format(url, lotCode);
         log.info("getHistory url:{}", url);
 
         try {
