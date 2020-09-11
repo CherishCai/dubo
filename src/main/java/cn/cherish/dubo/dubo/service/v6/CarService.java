@@ -69,7 +69,7 @@ public class CarService extends AbstractService {
         if (CollectionUtils.isEmpty(termsCacheWithBigOdd)) {
             return;
         }
-
+        log.info("afterDealHistory, TermNum={}", termsCacheWithBigOdd.get(0).getTermNum());
 
         dataMajor(termsCacheWithBigOdd, 9, true);
         dataMajor(termsCacheWithBigOdd, 9, false);

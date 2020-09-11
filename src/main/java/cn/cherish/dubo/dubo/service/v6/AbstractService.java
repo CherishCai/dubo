@@ -116,16 +116,19 @@ public abstract class AbstractService {
 
     protected void dealHistory(CarResult history) {
         if (history == null || history.getErrorCode() != 0) {
+            log.error("history == null || history.getErrorCode() != 0, {}", history);
             return;
         }
         List<Term> terms = history.getResult().getData().stream().map(this::newTerm).collect(Collectors.toList());
         if (CollectionUtils.isEmpty(terms)) {
+            log.error("CollectionUtils.isEmpty(terms), {}", terms);
             return;
         }
 
         if (!CollectionUtils.isEmpty(termsCache)
             && termsCache.get(0).getTermNum().equals(terms.get(0).getTermNum())) {
             // 没有新数据进来
+            log.info("没有新数据进来, TermNum={}", terms.get(0).getTermNum());
             return;
         }
 
@@ -133,7 +136,6 @@ public abstract class AbstractService {
             // cache
             termsCache = history.getResult().getData().stream().map(this::newTerm).collect(Collectors.toList());
             newestNumStr = termsCache.get(0).getTermNum() + "";
-
         }
 
         cacheDataWithBigOdd(history.getResult().getData().stream().map(this::newTerm).collect(Collectors.toList()));
@@ -159,6 +161,7 @@ public abstract class AbstractService {
     protected abstract void afterDealSortHistory(List<Term> sortedTerms);
 
     private void cacheDataWithBigOdd(List<Term> terms) {
+        log.info("cacheDataWithBigOdd, TermNum={}", terms.get(0).getTermNum());
 
         termsCacheWithBigOdd = terms.stream().peek(term -> {
             Integer[] termDataArr = term.getTermDataArr();
@@ -199,6 +202,9 @@ public abstract class AbstractService {
     }
 
     protected final void dataMajor(final List<Term> sortedTerms, final int countFailAlert, boolean oddEven) {
+
+        log.info("dataMajor, TermNum={},countFailAlert={},oddEven={}",
+                sortedTerms.get(0).getTermNum(), countFailAlert, oddEven);
 
         int pdd = oddEven ? 1 : 2;
 
