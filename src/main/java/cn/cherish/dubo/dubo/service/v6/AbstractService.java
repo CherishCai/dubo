@@ -41,7 +41,7 @@ public abstract class AbstractService {
     public volatile List<Term> termsCacheWithBigOdd = Collections.emptyList();
 
     // https://api.apiose122.com/pks/getPksHistoryList.do?lotCode=10037
-    protected String url = "http://ft.zzj321.com";
+    protected String url = "http://123.lotterycar.com/html/jssc/pk10kai_history.html";
 
     protected static final Queue<AlertTask> alertTaskQueue = new ConcurrentLinkedQueue<>();
 
@@ -260,6 +260,7 @@ public abstract class AbstractService {
                             + "错误：" + countFail + "次\r\n"
                             + "行号：" + (r2TermNum) + "\n"
                             + "列号：" + (cFirst + 1) + "\n"
+                            + "列值：" + (termData) + "\n"
                             + "时间：" + new Date() + "\n"
                             + "";
                     AlertTask alertTask = AlertTask.builder()
