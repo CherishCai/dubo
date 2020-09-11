@@ -49,7 +49,9 @@ public final class DuboUtilsV6 {
                 log.warn("getHistory responseBody is null, url:{}", url);
                 return null;
             }
-            return JSON.parseObject(body.string(), CarResult.class);
+            String bodyString = body.string();
+            log.info("getHistory result:{}", bodyString);
+            return JSON.parseObject(bodyString, CarResult.class);
         } catch (Exception e) {
             log.error("getHistory error, url:{}", url, e);
         }
